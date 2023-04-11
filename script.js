@@ -34,7 +34,7 @@ for (let i = 0; i < SIZE ** 2; i++) {
 }
 var div = document.getElementsByTagName('div')
 function win() {
-    winPositions.forEach((position, index) => {
+    winPositions.forEach(position => {
         if (div[position[1 - 1] - 1].innerText !== "" && div[position[1 - 1] - 1].innerText === div[position[2 - 1] - 1].innerText && div[position[2 - 1] - 1].innerText === div[position[3 - 1] - 1].innerText) {
             div[position[1 - 1] - 1].style.opacity = div[position[2 - 1] - 1].style.opacity = div[position[3 - 1] - 1].style.opacity = "0.5"
             gameOver = true
