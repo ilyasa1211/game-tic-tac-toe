@@ -16,6 +16,7 @@ var winPositions = [
     [3, 5, 7]
 ]
 
+section.style.setProperty("--SIZE", SIZE)
 body.appendChild(info)
 body.appendChild(section)
 
