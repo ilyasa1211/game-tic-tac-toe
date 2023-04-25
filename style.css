@@ -1,20 +1,59 @@
+html {
+    scroll-behavior: smooth;
+}
+
 body {
+    --bgcolor: rgb(46, 46, 46);
     margin: 0;
-    display: flex;
-    flex-direction: column;
+    font-family: monospace;
+    background-color: var(--bgcolor);
+    color: white;
+}
+
+body>* {
     height: 100svh;
+}
+
+main,
+header {
+    position: sticky;
+    background-color: var(--bgcolor);
+    top: 0;
+    display: flex;
     justify-content: center;
     align-items: center;
-    font-family: monospace;
-    background-color: rgb(46, 46, 46);
-    color: white;
-    padding: 1rem;
+    flex-direction: column;
 }
 
 section {
     display: grid;
     grid-template-columns: repeat(var(--SIZE), auto);
     gap: 1rem;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+}
+
+a {
+    text-align: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid white;
+    box-sizing: border-box;
+    border-collapse: collapse;
+    display: block;
+    color: currentColor;
+    text-decoration: none;
+}
+a:hover {
+    background-color: white;
+    color: var(--bgcolor);
 }
 
 div {
