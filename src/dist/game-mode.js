@@ -25,7 +25,7 @@ class GameMode {
             return Utils.showAlert("Game is currenty playing!");
         const childTarget = e.target;
         const liTarget = childTarget.parentElement;
-        Game.setIsPlaying(true);
+        Game.isPlaying(true);
         GameMode.setCurrentMode(liTarget.dataset.mode);
         info.innerText = childTarget.innerText;
     }

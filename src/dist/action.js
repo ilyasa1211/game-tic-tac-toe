@@ -17,7 +17,7 @@ class Action {
         const player = Game.getCurrentPlayer();
         divTarget.onclick = null;
         divTarget.innerText = player;
-        Game.check(info);
+        Game.checkGameOver(info);
         Game.turn();
     }
     ;
@@ -40,12 +40,12 @@ class Action {
         const player = Game.getCurrentPlayer();
         divTarget.onclick = null;
         divTarget.innerText = player;
-        Game.check(info);
+        Game.checkGameOver(info);
         Game.turn();
         // Computer Logic
         if (Game.isGameOver())
             return;
-        Game.setIsThinking(true);
+        Game.isThinking(true);
         Utils.SimulateThinking(() => {
             const computerChoose = Utils.getRandomIntBetween(0, Game._availablePosition.length - 1);
             const divTile = document.getElementsByClassName("tile")[Game._availablePosition[computerChoose]];
@@ -59,9 +59,9 @@ class Action {
             const computer = Game.getCurrentPlayer();
             divTile.onclick = null;
             divTile.innerText = computer;
-            Game.check(info);
+            Game.checkGameOver(info);
             Game.turn();
-            Game.setIsThinking(false);
+            Game.isThinking(false);
         });
     }
 }

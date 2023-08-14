@@ -1,19 +1,18 @@
 "use strict";
 class Game {
     constructor() {
-        this._isGameOver = false;
         this.winPositionsOffset = -1;
     }
-    static isThinking() {
-        return this._isThinking;
-    }
-    static setIsThinking(isThinking) {
+    static isThinking(isThinking) {
+        if (typeof isThinking === "undefined") {
+            return this._isThinking;
+        }
         this._isThinking = isThinking;
     }
-    static isPlaying() {
-        return this._isPlaying;
-    }
-    static setIsPlaying(isPlaying) {
+    static isPlaying(isPlaying) {
+        if (typeof isPlaying === "undefined") {
+            return this._isPlaying;
+        }
         this._isPlaying = isPlaying;
     }
     static getCurrentPlayer() {
@@ -26,23 +25,26 @@ class Game {
         this._action = action;
     }
     static drawBoard(insideHtmlElement) {
-        for (let i = 0; i < this._size ** 2; i++) {
+        for (let index = 0; index < this._size ** 2; index++) {
             let div = document.createElement("div");
             div.classList.add("tile");
-            div.onclick = (e) => this._action.getAction(GameMode.getCurrentMode())(e, i);
+            div.onclick = (event) => {
+                var _a;
+                return (_a = this._action) === null || _a === void 0 ? void 0 : _a.getAction(GameMode.getCurrentMode())(event, index);
+            };
             insideHtmlElement.appendChild(div);
         }
     }
     static setBoardSize(size) {
         this._size = size;
-        this._availablePosition = new Array(size ** 2).fill(null).map((_, i) => i);
+        this._availablePosition = new Array(size ** 2).fill(null).map((_value, index) => index);
     }
     static restartGame() {
     }
     static isGameOver() {
-        return this.prototype._isGameOver;
+        return this._isGameOver;
     }
-    static check(info) {
+    static checkGameOver(info) {
         if (Game.isDraw()) {
             info.innerText = Message.draw();
         }
@@ -53,29 +55,30 @@ class Game {
     }
     static isWin() {
         this._winPositions.forEach((position) => {
-            const firstSquare = div[position[1 - 1] - 1];
-            const secondSquare = div[position[2 - 1] - 1];
-            const thirdSquare = div[position[3 - 1] - 1];
-            const isValid = firstSquare.innerText !== "";
-            const isMatch1 = firstSquare.innerText === secondSquare.innerText;
-            const isMatch2 = secondSquare.innerText === thirdSquare.innerText;
+            const firstTile = div[position[1 - 1] - 1];
+            const secondTile = div[position[2 - 1] - 1];
+            const thirdTile = div[position[3 - 1] - 1];
+            const isValid = firstTile.innerText !== "";
+            const isMatch1 = firstTile.innerText === secondTile.innerText;
+            const isMatch2 = secondTile.innerText === thirdTile.innerText;
             if (isValid && isMatch1 && isMatch2) {
                 const dim = "0.5";
-                firstSquare.style.opacity = dim;
-                secondSquare.style.opacity = dim;
-                thirdSquare.style.opacity = dim;
-                this.prototype._isGameOver = true;
+                firstTile.style.opacity = dim;
+                secondTile.style.opacity = dim;
+                thirdTile.style.opacity = dim;
+                this._isGameOver = true;
             }
         });
-        return this.prototype._isGameOver;
+        return this._isGameOver;
     }
     static isDraw() {
-        return !Array.from(div).find((_) => _.innerText === "");
+        return !Array.from(div).find((tile) => tile.innerText === "");
     }
 }
 Game._turn = 0;
 Game._isPlaying = false;
 Game._isThinking = false;
+Game._isGameOver = false;
 Game._winPositions = [
     [1, 2, 3],
     [4, 5, 6],

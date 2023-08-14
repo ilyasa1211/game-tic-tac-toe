@@ -4,7 +4,7 @@ class Game {
     private static _action: Action | undefined;
     private static _isPlaying = false;
     private static _isThinking = false;
-    private _isGameOver: boolean = false
+    private static _isGameOver: boolean = false
     private static readonly _winPositions = [
         [1, 2, 3],
         [4, 5, 6],
@@ -18,17 +18,17 @@ class Game {
     private readonly winPositionsOffset = -1;
     public static _availablePosition: number[] | undefined;
 
-    public static isThinking(): boolean {
-        return this._isThinking;
-    }
-    public static setIsThinking(isThinking: boolean): void {
+    public static isThinking(isThinking?: boolean | undefined): boolean | void {
+        if (typeof isThinking === "undefined") {
+            return this._isThinking;
+        }
         this._isThinking = isThinking;
     }
 
-    public static isPlaying(): boolean {
-        return this._isPlaying;
-    }
-    public static setIsPlaying(isPlaying: boolean): void {
+    public static isPlaying(isPlaying?: boolean | undefined): boolean | void {
+        if (typeof isPlaying === "undefined") {
+            return this._isPlaying;
+        }
         this._isPlaying = isPlaying;
     }
 
@@ -43,25 +43,27 @@ class Game {
         this._action = action;
     }
     public static drawBoard(insideHtmlElement: HTMLElement) {
-        for (let i = 0; i < this._size! ** 2; i++) {
+        for (let index = 0; index < this._size! ** 2; index++) {
             let div = document.createElement("div");
             div.classList.add("tile");
-            div.onclick = (e: MouseEvent) => this._action!.getAction(GameMode.getCurrentMode())(e, i);
+            div.onclick = (event: MouseEvent) => {
+                return this._action?.getAction(GameMode.getCurrentMode())(event, index)
+            }
             insideHtmlElement.appendChild(div);
         }
     }
     public static setBoardSize(size: number): void {
         this._size = size;
-        this._availablePosition = new Array(size ** 2).fill(null).map((_, i) => i);
+        this._availablePosition = new Array(size ** 2).fill(null).map((_value: null, index: number) => index);
     }
     public static restartGame() {
 
     }
 
     public static isGameOver() {
-        return this.prototype._isGameOver;
+        return this._isGameOver;
     }
-    public static check(info: HTMLElement) {
+    public static checkGameOver(info: HTMLElement) {
         if (Game.isDraw()) {
             info.innerText = Message.draw();
         };
@@ -83,12 +85,12 @@ class Game {
                 firstTile.style.opacity = dim
                 secondTile.style.opacity = dim
                 thirdTile.style.opacity = dim;
-                this.prototype._isGameOver = true;
+                this._isGameOver = true;
             }
         });
-        return this.prototype._isGameOver;
+        return this._isGameOver;
     }
     public static isDraw() {
-        return !Array.from(div).find((_) => _.innerText === "");
+        return !Array.from(div).find((tile: HTMLDivElement) => tile.innerText === "");
     }
 }
