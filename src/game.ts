@@ -72,17 +72,17 @@ class Game {
 
     public static isWin() {
         this._winPositions.forEach((position: number[]) => {
-            const firstSquare = div[position[1 - 1] - 1];
-            const secondSquare = div[position[2 - 1] - 1];
-            const thirdSquare = div[position[3 - 1] - 1];
-            const isValid: boolean = firstSquare.innerText !== "";
-            const isMatch1: boolean = firstSquare.innerText === secondSquare.innerText;
-            const isMatch2: boolean = secondSquare.innerText === thirdSquare.innerText;
+            const firstTile = div[position[1 - 1] - 1];
+            const secondTile = div[position[2 - 1] - 1];
+            const thirdTile = div[position[3 - 1] - 1];
+            const isValid: boolean = firstTile.innerText !== "";
+            const isMatch1: boolean = firstTile.innerText === secondTile.innerText;
+            const isMatch2: boolean = secondTile.innerText === thirdTile.innerText;
             if (isValid && isMatch1 && isMatch2) {
                 const dim = "0.5";
-                firstSquare.style.opacity = dim
-                secondSquare.style.opacity = dim
-                thirdSquare.style.opacity = dim;
+                firstTile.style.opacity = dim
+                secondTile.style.opacity = dim
+                thirdTile.style.opacity = dim;
                 this.prototype._isGameOver = true;
             }
         });
