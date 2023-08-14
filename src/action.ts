@@ -21,7 +21,7 @@ class Action {
         divTarget.onclick = null;
         divTarget.innerText = player;
 
-        GameOver.check(info);
+        Game.check(info);
         Game.turn();
 
     };
@@ -29,7 +29,7 @@ class Action {
 
     }
     public vsComputer(e: MouseEvent, index: number) {
-        if (GameOver.isGameOver()) return;
+        if (Game.isGameOver()) return;
         if (Game.isThinking()) return;
 
         const divTarget = e.target as HTMLDivElement;
@@ -47,11 +47,11 @@ class Action {
         divTarget.onclick = null;
         divTarget.innerText = player;
 
-        GameOver.check(info);
+        Game.check(info);
         Game.turn();
 
         // Computer Logic
-        if (GameOver.isGameOver()) return;
+        if (Game.isGameOver()) return;
 
         Game.setIsThinking(true);
 
@@ -70,7 +70,7 @@ class Action {
             divTile.onclick = null;
             divTile.innerText = computer;
 
-            GameOver.check(info);
+            Game.check(info);
             Game.turn();
 
             Game.setIsThinking(false);

@@ -17,14 +17,14 @@ class Action {
         const player = Game.getCurrentPlayer();
         divTarget.onclick = null;
         divTarget.innerText = player;
-        GameOver.check(info);
+        Game.check(info);
         Game.turn();
     }
     ;
     vsPlayerOnline(e, index) {
     }
     vsComputer(e, index) {
-        if (GameOver.isGameOver())
+        if (Game.isGameOver())
             return;
         if (Game.isThinking())
             return;
@@ -40,10 +40,10 @@ class Action {
         const player = Game.getCurrentPlayer();
         divTarget.onclick = null;
         divTarget.innerText = player;
-        GameOver.check(info);
+        Game.check(info);
         Game.turn();
         // Computer Logic
-        if (GameOver.isGameOver())
+        if (Game.isGameOver())
             return;
         Game.setIsThinking(true);
         Utils.SimulateThinking(() => {
@@ -59,7 +59,7 @@ class Action {
             const computer = Game.getCurrentPlayer();
             divTile.onclick = null;
             divTile.innerText = computer;
-            GameOver.check(info);
+            Game.check(info);
             Game.turn();
             Game.setIsThinking(false);
         });
