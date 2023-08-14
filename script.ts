@@ -11,7 +11,8 @@ type PlayerCharacter = "X" | "O";
 
 class GameMode {
   private _gameModeListContainer: HTMLOListElement | HTMLUListElement | undefined;
-  private static readonly GameModeOptions = {
+  private static _currentMode: keyof typeof this.GameModeOptions | undefined;
+  public static readonly GameModeOptions = {
     COMPUTER: "1 Player (Computer)",
     OFFLINE: "2 Player (Offline)",
     ONLINE: "2 Player (Online)",
@@ -26,6 +27,7 @@ class GameMode {
     key.forEach((value: keyof typeof GameMode.GameModeOptions, index: number) => {
       const li = document.createElement("li");
       const a = document.createElement("a");
+      li.dataset.mode = value;
       li.onclick = this.chooseMode;
       a.innerText = GameMode.GameModeOptions[value];
       a.href = "#main";
@@ -39,9 +41,22 @@ class GameMode {
     return Object.keys(gameModeOptions) as (keyof typeof GameMode.GameModeOptions)[];
   }
 
-  private chooseMode(e: MouseEvent) {
-    const liTarget = e.target as HTMLLIElement;
-    info.innerText = liTarget.innerText;
+  private chooseMode(e: MouseEvent): void {
+    if (Game.isPlaying()) return alert("Game is currenty playing!");
+    const childTarget = e.target as HTMLAnchorElement;
+    const liTarget = childTarget.parentElement as HTMLLIElement;
+    Game.setIsPlaying(true);
+    debugger;
+    GameMode.setCurrentMode(liTarget.dataset.mode as typeof GameMode._currentMode)
+    info.innerText = childTarget.innerText;
+  }
+
+  public static getCurrentMode() {
+    return this._currentMode;
+  }
+
+  public static setCurrentMode(mode: typeof this._currentMode): void {
+    this._currentMode = mode
   }
 }
 
@@ -61,8 +76,17 @@ class Player {
 class Game {
   private static _size: number | undefined;
   private static _turn = 0;
+  private static _action: Action | undefined;
+  private static _isPlaying = false;
 
-  private _availablePosition: number[] | undefined;
+  public static _availablePosition: number[] | undefined;
+
+  public static isPlaying(): boolean {
+    return this._isPlaying;
+  }
+  public static setIsPlaying(isPlaying: boolean): void {
+    this._isPlaying = isPlaying;
+  }
 
   public static getCurrentPlayer(): string {
     return Player.getPlayerByTurn(this._turn);
@@ -70,31 +94,93 @@ class Game {
 
   public static turn(): void {
     this._turn = this._turn % Player.count() - 1 === 0 ? 0 : this._turn + 1;
-    console.log(this._turn, Player.count());
+  }
+  public static addAction(action: Action) {
+    this._action = action;
   }
   public static drawBoard(insideHtmlElement: HTMLElement) {
     for (let i = 0; i < this._size! ** 2; i++) {
       let div = document.createElement("div");
-      div.onclick = (e: MouseEvent) => {
-        if (GameOver.isGameOver()) return;
-
-        const divTarget = e.target as HTMLDivElement;
-
-        this.prototype._availablePosition!.splice(i, 1);
-
-        const player = this.getCurrentPlayer();
-        divTarget.onclick = null;
-        divTarget.innerText = player;
-
-        Game.turn()
-        GameOver.check(info)
-      };
+      div.classList.add("tile");
+      div.onclick = (e: MouseEvent) => this._action!.getAction(GameMode.getCurrentMode()!)(e, i);
       insideHtmlElement.appendChild(div);
     }
   }
   public static setBoardSize(size: number): void {
     this._size = size;
-    this.prototype._availablePosition = new Array(size ** 2).fill(null).map((_, i) => i);
+    this._availablePosition = new Array(size ** 2).fill(null).map((_, i) => i);
+  }
+  public static restartGame() {
+
+  }
+}
+
+class Action {
+  public getAction(gameMode: keyof typeof GameMode.GameModeOptions) {
+    const action: Record<typeof gameMode, any> = {
+      COMPUTER: (e: MouseEvent, index: number) => this.vsComputer(e, index),
+      OFFLINE: (e: MouseEvent, index: number) => this.vsPlayerOffline(e, index),
+      ONLINE: (e: MouseEvent, index: number) => this.vsPlayerOnline(e, index),
+    }
+    return action[gameMode];
+  }
+  public vsPlayerOffline(e: MouseEvent, index: number): void {
+    if (GameOver.isGameOver()) return Game.setIsPlaying(false);
+
+    const divTarget = e.target as HTMLDivElement;
+
+    Game._availablePosition!.splice(index, 1);
+
+    const player = Game.getCurrentPlayer();
+    divTarget.onclick = null;
+    divTarget.innerText = player;
+
+    GameOver.check(info);
+    Game.turn();
+
+  };
+  public vsPlayerOnline(e: MouseEvent, index: number) {
+
+  }
+  public vsComputer(e: MouseEvent, index: number) {
+    if (GameOver.isGameOver()) return Game.setIsPlaying(false);
+
+    const divTarget = e.target as HTMLDivElement;
+
+    console.group("User");
+    console.log("Get: ", Game._availablePosition![index]);
+    console.log("User Choose: ", index);
+    console.log("Raw Before: ", Game._availablePosition);
+    Game._availablePosition!.splice(Game._availablePosition!.indexOf(index), 1);
+    console.log("Raw After: ", Game._availablePosition);
+    console.groupEnd();
+
+    const player = Game.getCurrentPlayer();
+    divTarget.onclick = null;
+    divTarget.innerText = player;
+
+    GameOver.check(info);
+    Game.turn();
+
+    // Computer Logic
+    if (GameOver.isGameOver()) return Game.setIsPlaying(false);
+
+    const computerChoose = Utils.getRandomIntBetween(0, Game._availablePosition!.length - 1)
+
+    const divTile = document.getElementsByClassName("tile")[Game._availablePosition![computerChoose]] as HTMLDivElement;
+    console.group("Computer");
+    console.log("Get: ", Game._availablePosition![computerChoose]);
+    console.log("Computer Choose: ", computerChoose);
+    console.log("Raw Before: ", Game._availablePosition);
+    Game._availablePosition!.splice(computerChoose, 1);
+    console.log("Raw After: ", Game._availablePosition);
+    console.groupEnd();
+    const computer = Game.getCurrentPlayer();
+    divTile.onclick = null;
+    divTile.innerText = computer;
+
+    GameOver.check(info);
+    Game.turn();
   }
 }
 
@@ -167,6 +253,6 @@ main();
 function main() {
   GameMode.init(gameModeListContainer);
   Game.setBoardSize(SIZE);
-
+  Game.addAction(new Action);
   Game.drawBoard(section);
 }
