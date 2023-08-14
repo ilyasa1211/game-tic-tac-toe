@@ -4,6 +4,13 @@ var div = document.getElementsByClassName("tile") as HTMLCollectionOf<HTMLDivEle
 var section = document.getElementsByTagName("section")[0];
 var info = document.getElementsByTagName("h1")[1];
 var gameModeListContainer = document.getElementsByTagName("ul")[0];
+var alertMessage = document.getElementById("alert-message") as HTMLParagraphElement;
+var alertContainer = document.getElementById("alert-container") as HTMLDivElement;
+var alertButton = document.getElementById("alert-button") as HTMLButtonElement;
+
+alertButton.addEventListener("click", function (event: MouseEvent) {
+  alertContainer.classList.add("hidden");
+})
 
 section.style.setProperty("--SIZE", String(SIZE));
 
@@ -42,7 +49,7 @@ class GameMode {
   }
 
   private chooseMode(e: MouseEvent): void {
-    if (Game.isPlaying()) return alert("Game is currenty playing!");
+    if (Game.isPlaying()) return Utils.showAlert("Game is currenty playing!");
     const childTarget = e.target as HTMLAnchorElement;
     const liTarget = childTarget.parentElement as HTMLLIElement;
     Game.setIsPlaying(true);
@@ -125,7 +132,7 @@ class Game {
 class Action {
   public getAction(gameMode: keyof typeof GameMode.GameModeOptions | undefined) {
     if (!gameMode) {
-      return alert("Oops! Please choose mode first");
+      return Utils.showAlert("Oops! Please choose mode first");
     }
     const action: Record<typeof gameMode, any> = {
       COMPUTER: (e: MouseEvent, index: number) => this.vsComputer(e, index),
@@ -135,7 +142,6 @@ class Action {
     return action[gameMode];
   }
   public vsPlayerOffline(e: MouseEvent, index: number): void {
-    if (GameOver.isGameOver()) return Game.setIsPlaying(false);
 
     const divTarget = e.target as HTMLDivElement;
 
@@ -153,7 +159,7 @@ class Action {
 
   }
   public vsComputer(e: MouseEvent, index: number) {
-    if (GameOver.isGameOver()) return Game.setIsPlaying(false);
+    if (GameOver.isGameOver()) return;
     if (Game.isThinking()) return;
 
     const divTarget = e.target as HTMLDivElement;
@@ -175,7 +181,7 @@ class Action {
     Game.turn();
 
     // Computer Logic
-    if (GameOver.isGameOver()) return Game.setIsPlaying(false);
+    if (GameOver.isGameOver()) return;
 
     Game.setIsThinking(true);
 
@@ -272,7 +278,8 @@ class Utils {
   }
 
   public static showAlert(message: string) {
-
+    alertMessage.innerText = message;
+    alertContainer.classList.remove("hidden")
   }
 }
 

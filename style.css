@@ -66,3 +66,46 @@ div.tile {
   justify-content: center;
   font-size: 3rem;
 }
+
+.hidden {
+  display: none;
+}
+div#alert-container {
+  position: fixed;
+  top: 0;
+  width: 100dvw;
+  height: 100dvh;
+  background-color: rgb(66, 66, 66, 0.8);
+  z-index: 1;
+}
+
+#alert-modal {
+  position: absolute;
+  padding: 2rem;
+  top: 50%;
+  left: 50%;
+  min-width: 400px;
+  min-height: 150px;
+  transform: translate(-50%, -50%);
+  transition: 0.5s;
+  background-color: antiquewhite;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  box-shadow: 0 0 15px rgba(33, 33, 33, 0.9);
+}
+
+#alert-message {
+  color: rgb(66, 66, 66);
+}
+
+#alert-button {
+  padding: 1rem;
+  background-color: seagreen;
+  color: antiquewhite;
+  border: none;
+}
+
+#alert-button:hover {
+  background-color: rgb(30, 116, 90);
+}

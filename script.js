@@ -3,6 +3,12 @@ var div = document.getElementsByClassName("tile");
 var section = document.getElementsByTagName("section")[0];
 var info = document.getElementsByTagName("h1")[1];
 var gameModeListContainer = document.getElementsByTagName("ul")[0];
+var alertMessage = document.getElementById("alert-message");
+var alertContainer = document.getElementById("alert-container");
+var alertButton = document.getElementById("alert-button");
+alertButton.addEventListener("click", function (event) {
+    alertContainer.classList.add("hidden");
+});
 section.style.setProperty("--SIZE", String(SIZE));
 class GameMode {
     static init(gameModeListContainer) {
@@ -27,7 +33,7 @@ class GameMode {
     }
     chooseMode(e) {
         if (Game.isPlaying())
-            return alert("Game is currenty playing!");
+            return Utils.showAlert("Game is currenty playing!");
         const childTarget = e.target;
         const liTarget = childTarget.parentElement;
         Game.setIsPlaying(true);
@@ -101,7 +107,7 @@ Game._isThinking = false;
 class Action {
     getAction(gameMode) {
         if (!gameMode) {
-            return alert("Oops! Please choose mode first");
+            return Utils.showAlert("Oops! Please choose mode first");
         }
         const action = {
             COMPUTER: (e, index) => this.vsComputer(e, index),
@@ -111,8 +117,6 @@ class Action {
         return action[gameMode];
     }
     vsPlayerOffline(e, index) {
-        if (GameOver.isGameOver())
-            return Game.setIsPlaying(false);
         const divTarget = e.target;
         Game._availablePosition.splice(index, 1);
         const player = Game.getCurrentPlayer();
@@ -126,7 +130,7 @@ class Action {
     }
     vsComputer(e, index) {
         if (GameOver.isGameOver())
-            return Game.setIsPlaying(false);
+            return;
         if (Game.isThinking())
             return;
         const divTarget = e.target;
@@ -145,7 +149,7 @@ class Action {
         Game.turn();
         // Computer Logic
         if (GameOver.isGameOver())
-            return Game.setIsPlaying(false);
+            return;
         Game.setIsThinking(true);
         Utils.SimulateThinking(() => {
             const computerChoose = Utils.getRandomIntBetween(0, Game._availablePosition.length - 1);
@@ -234,6 +238,8 @@ class Utils {
         return Math.floor(Math.random() * (max - min) + min);
     }
     static showAlert(message) {
+        alertMessage.innerText = message;
+        alertContainer.classList.remove("hidden");
     }
 }
 main();
