@@ -1,5 +1,5 @@
 const SIZE = 3;
-var div = document.getElementsByTagName("div");
+var div = document.getElementsByClassName("tile");
 var section = document.getElementsByTagName("section")[0];
 var info = document.getElementsByTagName("h1")[1];
 var gameModeListContainer = document.getElementsByTagName("ul")[0];
@@ -31,7 +31,6 @@ class GameMode {
         const childTarget = e.target;
         const liTarget = childTarget.parentElement;
         Game.setIsPlaying(true);
-        debugger;
         GameMode.setCurrentMode(liTarget.dataset.mode);
         info.innerText = childTarget.innerText;
     }
@@ -60,6 +59,12 @@ Player._player = {
     p2: "O",
 };
 class Game {
+    static isThinking() {
+        return this._isThinking;
+    }
+    static setIsThinking(isThinking) {
+        this._isThinking = isThinking;
+    }
     static isPlaying() {
         return this._isPlaying;
     }
@@ -92,8 +97,12 @@ class Game {
 }
 Game._turn = 0;
 Game._isPlaying = false;
+Game._isThinking = false;
 class Action {
     getAction(gameMode) {
+        if (!gameMode) {
+            return alert("Oops! Please choose mode first");
+        }
         const action = {
             COMPUTER: (e, index) => this.vsComputer(e, index),
             OFFLINE: (e, index) => this.vsPlayerOffline(e, index),
@@ -118,7 +127,10 @@ class Action {
     vsComputer(e, index) {
         if (GameOver.isGameOver())
             return Game.setIsPlaying(false);
+        if (Game.isThinking())
+            return;
         const divTarget = e.target;
+        // User
         console.group("User");
         console.log("Get: ", Game._availablePosition[index]);
         console.log("User Choose: ", index);
@@ -134,20 +146,24 @@ class Action {
         // Computer Logic
         if (GameOver.isGameOver())
             return Game.setIsPlaying(false);
-        const computerChoose = Utils.getRandomIntBetween(0, Game._availablePosition.length - 1);
-        const divTile = document.getElementsByClassName("tile")[Game._availablePosition[computerChoose]];
-        console.group("Computer");
-        console.log("Get: ", Game._availablePosition[computerChoose]);
-        console.log("Computer Choose: ", computerChoose);
-        console.log("Raw Before: ", Game._availablePosition);
-        Game._availablePosition.splice(computerChoose, 1);
-        console.log("Raw After: ", Game._availablePosition);
-        console.groupEnd();
-        const computer = Game.getCurrentPlayer();
-        divTile.onclick = null;
-        divTile.innerText = computer;
-        GameOver.check(info);
-        Game.turn();
+        Game.setIsThinking(true);
+        Utils.SimulateThinking(() => {
+            const computerChoose = Utils.getRandomIntBetween(0, Game._availablePosition.length - 1);
+            const divTile = document.getElementsByClassName("tile")[Game._availablePosition[computerChoose]];
+            console.group("Computer");
+            console.log("Get: ", Game._availablePosition[computerChoose]);
+            console.log("Computer Choose: ", computerChoose);
+            console.log("Raw Before: ", Game._availablePosition);
+            Game._availablePosition.splice(computerChoose, 1);
+            console.log("Raw After: ", Game._availablePosition);
+            console.groupEnd();
+            const computer = Game.getCurrentPlayer();
+            divTile.onclick = null;
+            divTile.innerText = computer;
+            GameOver.check(info);
+            Game.turn();
+            Game.setIsThinking(false);
+        });
     }
 }
 class GameOver {
@@ -208,8 +224,16 @@ class Message {
     }
 }
 class Utils {
+    static SimulateThinking(callback, thinkingkAverageMilisecond = 1000) {
+        const offset = thinkingkAverageMilisecond / 5;
+        const quartile1 = thinkingkAverageMilisecond - offset;
+        const quartile3 = thinkingkAverageMilisecond + offset;
+        setTimeout(() => callback(), this.getRandomIntBetween(quartile1, quartile3));
+    }
     static getRandomIntBetween(min, max) {
         return Math.floor(Math.random() * (max - min) + min);
+    }
+    static showAlert(message) {
     }
 }
 main();

@@ -1,6 +1,6 @@
 const SIZE = 3;
 
-var div = document.getElementsByTagName("div");
+var div = document.getElementsByClassName("tile") as HTMLCollectionOf<HTMLDivElement>;
 var section = document.getElementsByTagName("section")[0];
 var info = document.getElementsByTagName("h1")[1];
 var gameModeListContainer = document.getElementsByTagName("ul")[0];
@@ -46,7 +46,6 @@ class GameMode {
     const childTarget = e.target as HTMLAnchorElement;
     const liTarget = childTarget.parentElement as HTMLLIElement;
     Game.setIsPlaying(true);
-    debugger;
     GameMode.setCurrentMode(liTarget.dataset.mode as typeof GameMode._currentMode)
     info.innerText = childTarget.innerText;
   }
@@ -78,8 +77,16 @@ class Game {
   private static _turn = 0;
   private static _action: Action | undefined;
   private static _isPlaying = false;
+  private static _isThinking = false;
 
   public static _availablePosition: number[] | undefined;
+
+  public static isThinking(): boolean {
+    return this._isThinking;
+  }
+  public static setIsThinking(isThinking: boolean): void {
+    this._isThinking = isThinking;
+  }
 
   public static isPlaying(): boolean {
     return this._isPlaying;
@@ -102,7 +109,7 @@ class Game {
     for (let i = 0; i < this._size! ** 2; i++) {
       let div = document.createElement("div");
       div.classList.add("tile");
-      div.onclick = (e: MouseEvent) => this._action!.getAction(GameMode.getCurrentMode()!)(e, i);
+      div.onclick = (e: MouseEvent) => this._action!.getAction(GameMode.getCurrentMode())(e, i);
       insideHtmlElement.appendChild(div);
     }
   }
@@ -116,7 +123,10 @@ class Game {
 }
 
 class Action {
-  public getAction(gameMode: keyof typeof GameMode.GameModeOptions) {
+  public getAction(gameMode: keyof typeof GameMode.GameModeOptions | undefined) {
+    if (!gameMode) {
+      return alert("Oops! Please choose mode first");
+    }
     const action: Record<typeof gameMode, any> = {
       COMPUTER: (e: MouseEvent, index: number) => this.vsComputer(e, index),
       OFFLINE: (e: MouseEvent, index: number) => this.vsPlayerOffline(e, index),
@@ -144,9 +154,11 @@ class Action {
   }
   public vsComputer(e: MouseEvent, index: number) {
     if (GameOver.isGameOver()) return Game.setIsPlaying(false);
+    if (Game.isThinking()) return;
 
     const divTarget = e.target as HTMLDivElement;
 
+    // User
     console.group("User");
     console.log("Get: ", Game._availablePosition![index]);
     console.log("User Choose: ", index);
@@ -165,22 +177,28 @@ class Action {
     // Computer Logic
     if (GameOver.isGameOver()) return Game.setIsPlaying(false);
 
-    const computerChoose = Utils.getRandomIntBetween(0, Game._availablePosition!.length - 1)
+    Game.setIsThinking(true);
 
-    const divTile = document.getElementsByClassName("tile")[Game._availablePosition![computerChoose]] as HTMLDivElement;
-    console.group("Computer");
-    console.log("Get: ", Game._availablePosition![computerChoose]);
-    console.log("Computer Choose: ", computerChoose);
-    console.log("Raw Before: ", Game._availablePosition);
-    Game._availablePosition!.splice(computerChoose, 1);
-    console.log("Raw After: ", Game._availablePosition);
-    console.groupEnd();
-    const computer = Game.getCurrentPlayer();
-    divTile.onclick = null;
-    divTile.innerText = computer;
+    Utils.SimulateThinking(() => {
+      const computerChoose = Utils.getRandomIntBetween(0, Game._availablePosition!.length - 1)
 
-    GameOver.check(info);
-    Game.turn();
+      const divTile = document.getElementsByClassName("tile")[Game._availablePosition![computerChoose]] as HTMLDivElement;
+      console.group("Computer");
+      console.log("Get: ", Game._availablePosition![computerChoose]);
+      console.log("Computer Choose: ", computerChoose);
+      console.log("Raw Before: ", Game._availablePosition);
+      Game._availablePosition!.splice(computerChoose, 1);
+      console.log("Raw After: ", Game._availablePosition);
+      console.groupEnd();
+      const computer = Game.getCurrentPlayer();
+      divTile.onclick = null;
+      divTile.innerText = computer;
+
+      GameOver.check(info);
+      Game.turn();
+
+      Game.setIsThinking(false);
+    });
   }
 }
 
@@ -243,8 +261,18 @@ class Message {
 }
 
 class Utils {
+  public static SimulateThinking(callback: () => any, thinkingkAverageMilisecond: number = 1000): void {
+    const offset = thinkingkAverageMilisecond / 5;
+    const quartile1 = thinkingkAverageMilisecond - offset;
+    const quartile3 = thinkingkAverageMilisecond + offset;
+    setTimeout(() => callback(), this.getRandomIntBetween(quartile1, quartile3));
+  }
   public static getRandomIntBetween(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min) + min);
+  }
+
+  public static showAlert(message: string) {
+
   }
 }
 
