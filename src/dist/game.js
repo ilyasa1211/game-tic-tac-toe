@@ -115,4 +115,7 @@ class Game {
     isDraw() {
         return !Array.from(div).find((tile) => tile.textContent === "");
     }
+    isOffline() {
+        return !window.navigator.onLine;
+    }
 }

@@ -15,6 +15,8 @@ class Action {
         return action[gameMode];
     }
     vsPlayerOffline(e, index) {
+        if (this._game.isGameOver())
+            return;
         const divTarget = e.target;
         if (divTarget.textContent !== "") {
             return;

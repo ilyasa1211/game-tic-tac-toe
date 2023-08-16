@@ -14,6 +14,7 @@ class Action {
         return action[gameMode];
     }
     public vsPlayerOffline(e: MouseEvent, index: number): void {
+        if (this._game.isGameOver()) return;
 
         const divTarget = e.target as HTMLDivElement;
 

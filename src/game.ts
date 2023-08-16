@@ -45,10 +45,10 @@ class Game {
     public turn(): void {
         this._turn = this._turn % this._player!.count() - 1 === 0 ? 0 : this._turn + 1;
     }
-    public addAction(action: Action) {
+    public addAction(action: Action): void {
         this._action = action;
     }
-    public drawBoard(insideHtmlElement: HTMLElement) {
+    public drawBoard(insideHtmlElement: HTMLElement): void {
         for (let index = 0; index < this._size! ** 2; index++) {
             let div = document.createElement("div");
             div.classList.add("tile");
@@ -63,7 +63,7 @@ class Game {
         this._availablePosition = new Array(size ** 2).fill(null).map((_value: null, index: number) => index);
     }
 
-    public retryGame() {
+    public retryGame(): void {
         this.setBoardSize(this._size ?? 3);
         Array.from(div).forEach((tile: HTMLDivElement) => {
             tile.textContent = ""
@@ -72,7 +72,7 @@ class Game {
         this._isThinking = false;
         this._isGameOver = false;
     }
-    public resetGame() {
+    public resetGame(): void {
         this.retryGame();
         this._isPlaying = false;
         this._currentMode = undefined;
@@ -88,10 +88,10 @@ class Game {
     public setCurrentMode(mode: NonNullable<typeof this._currentMode>): void {
         this._currentMode = mode
     }
-    public isGameOver() {
+    public isGameOver(): boolean {
         return this._isGameOver;
     }
-    public checkGameOver(info: HTMLElement) {
+    public checkGameOver(info: HTMLElement): void {
         if (this.isDraw()) {
             info.textContent = Message.draw();
         };
@@ -100,7 +100,7 @@ class Game {
         }
     }
 
-    public isWin() {
+    public isWin(): boolean {
         this._winPositions.forEach((position: number[]) => {
             const firstTile = div[position[1 - 1] - 1];
             const secondTile = div[position[2 - 1] - 1];
@@ -118,7 +118,11 @@ class Game {
         });
         return this._isGameOver;
     }
-    public isDraw() {
+    public isDraw(): boolean {
         return !Array.from(div).find((tile: HTMLDivElement) => tile.textContent === "");
+    }
+
+    public isOffline(): boolean {
+        return !window.navigator.onLine
     }
 }
