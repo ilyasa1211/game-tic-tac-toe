@@ -5,8 +5,10 @@ alertButton.addEventListener("click", function (event: MouseEvent) {
 main();
 
 function main() {
-    GameMode.init(gameModeListContainer);
-    Game.setBoardSize(SIZE);
-    Game.addAction(new Action);
-    Game.drawBoard(section);
+    const game = new Game();
+    game.setBoardSize(SIZE);
+    game.addGameMode(new GameMode(game)).drawHtmlElement(gameModeListContainer);
+    game.addPlayer(new Player());
+    game.addAction(new Action(game));
+    game.drawBoard(section);
 }

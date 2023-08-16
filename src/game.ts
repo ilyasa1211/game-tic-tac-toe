@@ -1,11 +1,14 @@
 class Game {
-    private static _size: number | undefined;
-    private static _turn = 0;
-    private static _action: Action | undefined;
-    private static _isPlaying = false;
-    private static _isThinking = false;
-    private static _isGameOver: boolean = false
-    private static readonly _winPositions = [
+    private _size: number | undefined;
+    private _turn = 0;
+    private _action: Action | undefined;
+    private _isPlaying = false;
+    private _isThinking = false;
+    private _isGameOver: boolean = false;
+    private _gameMode: GameMode | undefined;
+    private _player: Player | undefined;
+    private _currentMode: keyof typeof GameMode.prototype.GameModeOptions | undefined;
+    private readonly _winPositions = [
         [1, 2, 3],
         [4, 5, 6],
         [7, 8, 9],
@@ -16,63 +19,75 @@ class Game {
         [3, 5, 7],
     ];
     private readonly winPositionsOffset = -1;
-    public static _availablePosition: number[] | undefined;
+    public _availablePosition: number[] | undefined;
 
-    public static isThinking(isThinking?: boolean | undefined): boolean | void {
+    public addPlayer(player: Player) {
+        this._player = player
+    }
+    public isThinking(isThinking?: boolean | undefined): boolean | void {
         if (typeof isThinking === "undefined") {
             return this._isThinking;
         }
         this._isThinking = isThinking;
     }
 
-    public static isPlaying(isPlaying?: boolean | undefined): boolean | void {
+    public isPlaying(isPlaying?: boolean | undefined): boolean | void {
         if (typeof isPlaying === "undefined") {
             return this._isPlaying;
         }
         this._isPlaying = isPlaying;
     }
 
-    public static getCurrentPlayer(): string {
-        return Player.getPlayerByTurn(this._turn);
+    public getCurrentPlayer(): string | undefined {
+        return this._player?.getPlayerByTurn(this._turn);
     }
 
-    public static turn(): void {
-        this._turn = this._turn % Player.count() - 1 === 0 ? 0 : this._turn + 1;
+    public turn(): void {
+        this._turn = this._turn % this._player!.count() - 1 === 0 ? 0 : this._turn + 1;
     }
-    public static addAction(action: Action) {
+    public addAction(action: Action) {
         this._action = action;
     }
-    public static drawBoard(insideHtmlElement: HTMLElement) {
+    public drawBoard(insideHtmlElement: HTMLElement) {
         for (let index = 0; index < this._size! ** 2; index++) {
             let div = document.createElement("div");
             div.classList.add("tile");
             div.onclick = (event: MouseEvent) => {
-                return this._action?.getAction(GameMode.getCurrentMode())(event, index)
+                return this._action?.getAction(this.getCurrentMode())(event, index)
             }
             insideHtmlElement.appendChild(div);
         }
     }
-    public static setBoardSize(size: number): void {
+    public setBoardSize(size: number): void {
         this._size = size;
         this._availablePosition = new Array(size ** 2).fill(null).map((_value: null, index: number) => index);
     }
-    public static restartGame() {
+    public restartGame() {
 
     }
-
-    public static isGameOver() {
+    public addGameMode(gameMode: GameMode): GameMode {
+        this._gameMode = gameMode;
+        return this._gameMode;
+    }
+    public getCurrentMode() {
+        return this._currentMode;
+    }
+    public setCurrentMode(mode: NonNullable<typeof this._currentMode>): void {
+        this._currentMode = mode
+    }
+    public isGameOver() {
         return this._isGameOver;
     }
-    public static checkGameOver(info: HTMLElement) {
-        if (Game.isDraw()) {
+    public checkGameOver(info: HTMLElement) {
+        if (this.isDraw()) {
             info.innerText = Message.draw();
         };
-        if (Game.isWin()) {
-            info.innerText = Message.won(Game.getCurrentPlayer());
+        if (this.isWin()) {
+            info.innerText = Message.won(this.getCurrentPlayer()!);
         }
     }
 
-    public static isWin() {
+    public isWin() {
         this._winPositions.forEach((position: number[]) => {
             const firstTile = div[position[1 - 1] - 1];
             const secondTile = div[position[2 - 1] - 1];
@@ -90,7 +105,7 @@ class Game {
         });
         return this._isGameOver;
     }
-    public static isDraw() {
+    public isDraw() {
         return !Array.from(div).find((tile: HTMLDivElement) => tile.innerText === "");
     }
 }

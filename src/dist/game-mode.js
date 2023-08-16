@@ -1,43 +1,37 @@
 "use strict";
 class GameMode {
-    static init(gameModeListContainer) {
-        this.prototype._gameModeListContainer = gameModeListContainer;
-        this.prototype.drawHtmlElement(GameMode.GameModeOptions);
+    constructor(_game) {
+        this._game = _game;
+        this.GameModeOptions = {
+            COMPUTER: "1 Player (Computer)",
+            OFFLINE: "2 Player (Offline)",
+            ONLINE: "2 Player (Online)",
+        };
     }
-    drawHtmlElement(gameModeOptions) {
-        const key = this.extractGameModes(gameModeOptions);
+    drawHtmlElement(gameModeListContainer) {
+        const key = this.extractGameModes(this.GameModeOptions);
         key.forEach((value, index) => {
             const li = document.createElement("li");
             const a = document.createElement("a");
             li.dataset.mode = value;
-            li.onclick = this.chooseMode;
-            a.innerText = GameMode.GameModeOptions[value];
+            li.onclick = (e) => this.chooseMode.apply(this, [e]);
+            a.innerText = this.GameModeOptions[value];
             a.href = "#main";
             li.appendChild(a);
-            this._gameModeListContainer.appendChild(li);
+            gameModeListContainer.appendChild(li);
         });
+    }
+    chooseMode(e) {
+        if (this._game.isPlaying())
+            return Utils.showAlert("Game is currenty playing!");
+        const childTarget = e.target;
+        const liTarget = childTarget.parentElement;
+        const mode = liTarget.dataset.mode;
+        this._game.isPlaying(true);
+        this._game.setCurrentMode(mode);
+        info.innerText = childTarget.innerText;
     }
     extractGameModes(gameModeOptions) {
         return Object.keys(gameModeOptions);
     }
-    chooseMode(e) {
-        if (Game.isPlaying())
-            return Utils.showAlert("Game is currenty playing!");
-        const childTarget = e.target;
-        const liTarget = childTarget.parentElement;
-        Game.isPlaying(true);
-        GameMode.setCurrentMode(liTarget.dataset.mode);
-        info.innerText = childTarget.innerText;
-    }
-    static getCurrentMode() {
-        return this._currentMode;
-    }
-    static setCurrentMode(mode) {
-        this._currentMode = mode;
-    }
 }
-GameMode.GameModeOptions = {
-    COMPUTER: "1 Player (Computer)",
-    OFFLINE: "2 Player (Offline)",
-    ONLINE: "2 Player (Online)",
-};

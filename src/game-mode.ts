@@ -1,49 +1,39 @@
 class GameMode {
-    private _gameModeListContainer: HTMLOListElement | HTMLUListElement | undefined;
-    private static _currentMode: keyof typeof this.GameModeOptions | undefined;
-    public static readonly GameModeOptions = {
+    public constructor(private _game: Game) { }
+    public readonly GameModeOptions = {
         COMPUTER: "1 Player (Computer)",
         OFFLINE: "2 Player (Offline)",
         ONLINE: "2 Player (Online)",
     }
-    public static init(gameModeListContainer: typeof this.prototype._gameModeListContainer) {
-        this.prototype._gameModeListContainer = gameModeListContainer
-        this.prototype.drawHtmlElement(GameMode.GameModeOptions);
-    }
-    private drawHtmlElement(gameModeOptions: typeof GameMode.GameModeOptions) {
-        const key = this.extractGameModes(gameModeOptions);
+    public drawHtmlElement(gameModeListContainer: HTMLOListElement | HTMLUListElement) {
+        const key = this.extractGameModes(this.GameModeOptions);
 
-        key.forEach((value: keyof typeof GameMode.GameModeOptions, index: number) => {
+        key.forEach((value: keyof typeof this.GameModeOptions, index: number) => {
             const li = document.createElement("li");
             const a = document.createElement("a");
             li.dataset.mode = value;
-            li.onclick = this.chooseMode;
-            a.innerText = GameMode.GameModeOptions[value];
+            li.onclick = (e: MouseEvent) => this.chooseMode.apply(this, [e]);
+            a.innerText = this.GameModeOptions[value];
             a.href = "#main";
             li.appendChild(a);
-            this._gameModeListContainer!.appendChild(li);
+            gameModeListContainer!.appendChild(li);
         }
         );
 
     }
-    private extractGameModes(gameModeOptions: typeof GameMode.GameModeOptions): (keyof typeof GameMode.GameModeOptions)[] {
-        return Object.keys(gameModeOptions) as (keyof typeof GameMode.GameModeOptions)[];
-    }
-
     private chooseMode(e: MouseEvent): void {
-        if (Game.isPlaying()) return Utils.showAlert("Game is currenty playing!");
+        if (this._game.isPlaying()) return Utils.showAlert("Game is currenty playing!");
         const childTarget = e.target as HTMLAnchorElement;
         const liTarget = childTarget.parentElement as HTMLLIElement;
-        Game.isPlaying(true);
-        GameMode.setCurrentMode(liTarget.dataset.mode as typeof GameMode._currentMode)
+        const mode = liTarget.dataset.mode as keyof typeof this.GameModeOptions
+        this._game.isPlaying(true);
+
+        this._game.setCurrentMode(mode)
         info.innerText = childTarget.innerText;
     }
-
-    public static getCurrentMode() {
-        return this._currentMode;
+    public extractGameModes(gameModeOptions: typeof this.GameModeOptions): (keyof typeof this.GameModeOptions)[] {
+        return Object.keys(gameModeOptions) as (keyof typeof this.GameModeOptions)[];
     }
 
-    public static setCurrentMode(mode: typeof this._currentMode): void {
-        this._currentMode = mode
-    }
+
 }

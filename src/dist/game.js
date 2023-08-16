@@ -1,59 +1,87 @@
 "use strict";
 class Game {
     constructor() {
+        this._turn = 0;
+        this._isPlaying = false;
+        this._isThinking = false;
+        this._isGameOver = false;
+        this._winPositions = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9],
+            [1, 4, 7],
+            [2, 5, 8],
+            [3, 6, 9],
+            [1, 5, 9],
+            [3, 5, 7],
+        ];
         this.winPositionsOffset = -1;
     }
-    static isThinking(isThinking) {
+    addPlayer(player) {
+        this._player = player;
+    }
+    isThinking(isThinking) {
         if (typeof isThinking === "undefined") {
             return this._isThinking;
         }
         this._isThinking = isThinking;
     }
-    static isPlaying(isPlaying) {
+    isPlaying(isPlaying) {
         if (typeof isPlaying === "undefined") {
             return this._isPlaying;
         }
         this._isPlaying = isPlaying;
     }
-    static getCurrentPlayer() {
-        return Player.getPlayerByTurn(this._turn);
+    getCurrentPlayer() {
+        var _a;
+        return (_a = this._player) === null || _a === void 0 ? void 0 : _a.getPlayerByTurn(this._turn);
     }
-    static turn() {
-        this._turn = this._turn % Player.count() - 1 === 0 ? 0 : this._turn + 1;
+    turn() {
+        this._turn = this._turn % this._player.count() - 1 === 0 ? 0 : this._turn + 1;
     }
-    static addAction(action) {
+    addAction(action) {
         this._action = action;
     }
-    static drawBoard(insideHtmlElement) {
+    drawBoard(insideHtmlElement) {
         for (let index = 0; index < this._size ** 2; index++) {
             let div = document.createElement("div");
             div.classList.add("tile");
             div.onclick = (event) => {
                 var _a;
-                return (_a = this._action) === null || _a === void 0 ? void 0 : _a.getAction(GameMode.getCurrentMode())(event, index);
+                return (_a = this._action) === null || _a === void 0 ? void 0 : _a.getAction(this.getCurrentMode())(event, index);
             };
             insideHtmlElement.appendChild(div);
         }
     }
-    static setBoardSize(size) {
+    setBoardSize(size) {
         this._size = size;
         this._availablePosition = new Array(size ** 2).fill(null).map((_value, index) => index);
     }
-    static restartGame() {
+    restartGame() {
     }
-    static isGameOver() {
+    addGameMode(gameMode) {
+        this._gameMode = gameMode;
+        return this._gameMode;
+    }
+    getCurrentMode() {
+        return this._currentMode;
+    }
+    setCurrentMode(mode) {
+        this._currentMode = mode;
+    }
+    isGameOver() {
         return this._isGameOver;
     }
-    static checkGameOver(info) {
-        if (Game.isDraw()) {
+    checkGameOver(info) {
+        if (this.isDraw()) {
             info.innerText = Message.draw();
         }
         ;
-        if (Game.isWin()) {
-            info.innerText = Message.won(Game.getCurrentPlayer());
+        if (this.isWin()) {
+            info.innerText = Message.won(this.getCurrentPlayer());
         }
     }
-    static isWin() {
+    isWin() {
         this._winPositions.forEach((position) => {
             const firstTile = div[position[1 - 1] - 1];
             const secondTile = div[position[2 - 1] - 1];
@@ -71,21 +99,7 @@ class Game {
         });
         return this._isGameOver;
     }
-    static isDraw() {
+    isDraw() {
         return !Array.from(div).find((tile) => tile.innerText === "");
     }
 }
-Game._turn = 0;
-Game._isPlaying = false;
-Game._isThinking = false;
-Game._isGameOver = false;
-Game._winPositions = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-    [1, 4, 7],
-    [2, 5, 8],
-    [3, 6, 9],
-    [1, 5, 9],
-    [3, 5, 7],
-];

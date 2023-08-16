@@ -1,5 +1,8 @@
 "use strict";
 class Action {
+    constructor(_game) {
+        this._game = _game;
+    }
     getAction(gameMode) {
         if (!gameMode) {
             return Utils.showAlert("Oops! Please choose mode first");
@@ -13,55 +16,55 @@ class Action {
     }
     vsPlayerOffline(e, index) {
         const divTarget = e.target;
-        Game._availablePosition.splice(index, 1);
-        const player = Game.getCurrentPlayer();
+        this._game._availablePosition.splice(index, 1);
+        const player = this._game.getCurrentPlayer();
         divTarget.onclick = null;
         divTarget.innerText = player;
-        Game.checkGameOver(info);
-        Game.turn();
+        this._game.checkGameOver(info);
+        this._game.turn();
     }
     ;
     vsPlayerOnline(e, index) {
     }
     vsComputer(e, index) {
-        if (Game.isGameOver())
+        if (this._game.isGameOver())
             return;
-        if (Game.isThinking())
+        if (this._game.isThinking())
             return;
         const divTarget = e.target;
         // User
         console.group("User");
-        console.log("Get: ", Game._availablePosition[index]);
+        console.log("Get: ", this._game._availablePosition[index]);
         console.log("User Choose: ", index);
-        console.log("Raw Before: ", Game._availablePosition);
-        Game._availablePosition.splice(Game._availablePosition.indexOf(index), 1);
-        console.log("Raw After: ", Game._availablePosition);
+        console.log("Raw Before: ", this._game._availablePosition);
+        this._game._availablePosition.splice(this._game._availablePosition.indexOf(index), 1);
+        console.log("Raw After: ", this._game._availablePosition);
         console.groupEnd();
-        const player = Game.getCurrentPlayer();
+        const player = this._game.getCurrentPlayer();
         divTarget.onclick = null;
         divTarget.innerText = player;
-        Game.checkGameOver(info);
-        Game.turn();
+        this._game.checkGameOver(info);
+        this._game.turn();
         // Computer Logic
-        if (Game.isGameOver())
+        if (this._game.isGameOver())
             return;
-        Game.isThinking(true);
+        this._game.isThinking(true);
         Utils.SimulateThinking(() => {
-            const computerChoose = Utils.getRandomIntBetween(0, Game._availablePosition.length - 1);
-            const divTile = document.getElementsByClassName("tile")[Game._availablePosition[computerChoose]];
+            const computerChoose = Utils.getRandomIntBetween(0, this._game._availablePosition.length - 1);
+            const divTile = document.getElementsByClassName("tile")[this._game._availablePosition[computerChoose]];
             console.group("Computer");
-            console.log("Get: ", Game._availablePosition[computerChoose]);
+            console.log("Get: ", this._game._availablePosition[computerChoose]);
             console.log("Computer Choose: ", computerChoose);
-            console.log("Raw Before: ", Game._availablePosition);
-            Game._availablePosition.splice(computerChoose, 1);
-            console.log("Raw After: ", Game._availablePosition);
+            console.log("Raw Before: ", this._game._availablePosition);
+            this._game._availablePosition.splice(computerChoose, 1);
+            console.log("Raw After: ", this._game._availablePosition);
             console.groupEnd();
-            const computer = Game.getCurrentPlayer();
+            const computer = this._game.getCurrentPlayer();
             divTile.onclick = null;
             divTile.innerText = computer;
-            Game.checkGameOver(info);
-            Game.turn();
-            Game.isThinking(false);
+            this._game.checkGameOver(info);
+            this._game.turn();
+            this._game.isThinking(false);
         });
     }
 }
