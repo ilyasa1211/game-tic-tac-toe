@@ -62,9 +62,22 @@ class Game {
         this._size = size;
         this._availablePosition = new Array(size ** 2).fill(null).map((_value: null, index: number) => index);
     }
-    public restartGame() {
 
+    public retryGame() {
+        this.setBoardSize(this._size ?? 3);
+        Array.from(div).forEach((tile: HTMLDivElement) => {
+            tile.textContent = ""
+            tile.style.opacity = "1"
+        });
+        this._isThinking = false;
+        this._isGameOver = false;
     }
+    public resetGame() {
+        this.retryGame();
+        this._isPlaying = false;
+        this._currentMode = undefined;
+    }
+
     public addGameMode(gameMode: GameMode): GameMode {
         this._gameMode = gameMode;
         return this._gameMode;
@@ -80,10 +93,10 @@ class Game {
     }
     public checkGameOver(info: HTMLElement) {
         if (this.isDraw()) {
-            info.innerText = Message.draw();
+            info.textContent = Message.draw();
         };
         if (this.isWin()) {
-            info.innerText = Message.won(this.getCurrentPlayer()!);
+            info.textContent = Message.won(this.getCurrentPlayer()!);
         }
     }
 
@@ -92,9 +105,9 @@ class Game {
             const firstTile = div[position[1 - 1] - 1];
             const secondTile = div[position[2 - 1] - 1];
             const thirdTile = div[position[3 - 1] - 1];
-            const isValid: boolean = firstTile.innerText !== "";
-            const isMatch1: boolean = firstTile.innerText === secondTile.innerText;
-            const isMatch2: boolean = secondTile.innerText === thirdTile.innerText;
+            const isValid: boolean = firstTile.textContent !== "";
+            const isMatch1: boolean = firstTile.textContent === secondTile.textContent;
+            const isMatch2: boolean = secondTile.textContent === thirdTile.textContent;
             if (isValid && isMatch1 && isMatch2) {
                 const dim = "0.5";
                 firstTile.style.opacity = dim
@@ -106,6 +119,6 @@ class Game {
         return this._isGameOver;
     }
     public isDraw() {
-        return !Array.from(div).find((tile: HTMLDivElement) => tile.innerText === "");
+        return !Array.from(div).find((tile: HTMLDivElement) => tile.textContent === "");
     }
 }

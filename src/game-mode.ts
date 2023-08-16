@@ -13,7 +13,7 @@ class GameMode {
             const a = document.createElement("a");
             li.dataset.mode = value;
             li.onclick = (e: MouseEvent) => this.chooseMode.apply(this, [e]);
-            a.innerText = this.GameModeOptions[value];
+            a.textContent = this.GameModeOptions[value];
             a.href = "#main";
             li.appendChild(a);
             gameModeListContainer!.appendChild(li);
@@ -29,7 +29,7 @@ class GameMode {
         this._game.isPlaying(true);
 
         this._game.setCurrentMode(mode)
-        info.innerText = childTarget.innerText;
+        info.textContent = childTarget.textContent;
     }
     public extractGameModes(gameModeOptions: typeof this.GameModeOptions): (keyof typeof this.GameModeOptions)[] {
         return Object.keys(gameModeOptions) as (keyof typeof this.GameModeOptions)[];

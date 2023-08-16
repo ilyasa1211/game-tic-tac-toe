@@ -4,6 +4,7 @@ alertButton.addEventListener("click", function (event: MouseEvent) {
 
 main();
 
+
 function main() {
     const game = new Game();
     game.setBoardSize(SIZE);
@@ -11,4 +12,6 @@ function main() {
     game.addPlayer(new Player());
     game.addAction(new Action(game));
     game.drawBoard(section);
+    Object.defineProperty(window, 'retry', { value: () => game.retryGame() })
+    Object.defineProperty(window, 'reset', { value: () => game.resetGame() })
 }

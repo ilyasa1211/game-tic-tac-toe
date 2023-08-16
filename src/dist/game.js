@@ -57,7 +57,20 @@ class Game {
         this._size = size;
         this._availablePosition = new Array(size ** 2).fill(null).map((_value, index) => index);
     }
-    restartGame() {
+    retryGame() {
+        var _a;
+        this.setBoardSize((_a = this._size) !== null && _a !== void 0 ? _a : 3);
+        Array.from(div).forEach((tile) => {
+            tile.textContent = "";
+            tile.style.opacity = "1";
+        });
+        this._isThinking = false;
+        this._isGameOver = false;
+    }
+    resetGame() {
+        this.retryGame();
+        this._isPlaying = false;
+        this._currentMode = undefined;
     }
     addGameMode(gameMode) {
         this._gameMode = gameMode;
@@ -74,11 +87,11 @@ class Game {
     }
     checkGameOver(info) {
         if (this.isDraw()) {
-            info.innerText = Message.draw();
+            info.textContent = Message.draw();
         }
         ;
         if (this.isWin()) {
-            info.innerText = Message.won(this.getCurrentPlayer());
+            info.textContent = Message.won(this.getCurrentPlayer());
         }
     }
     isWin() {
@@ -86,9 +99,9 @@ class Game {
             const firstTile = div[position[1 - 1] - 1];
             const secondTile = div[position[2 - 1] - 1];
             const thirdTile = div[position[3 - 1] - 1];
-            const isValid = firstTile.innerText !== "";
-            const isMatch1 = firstTile.innerText === secondTile.innerText;
-            const isMatch2 = secondTile.innerText === thirdTile.innerText;
+            const isValid = firstTile.textContent !== "";
+            const isMatch1 = firstTile.textContent === secondTile.textContent;
+            const isMatch2 = secondTile.textContent === thirdTile.textContent;
             if (isValid && isMatch1 && isMatch2) {
                 const dim = "0.5";
                 firstTile.style.opacity = dim;
@@ -100,6 +113,6 @@ class Game {
         return this._isGameOver;
     }
     isDraw() {
-        return !Array.from(div).find((tile) => tile.innerText === "");
+        return !Array.from(div).find((tile) => tile.textContent === "");
     }
 }

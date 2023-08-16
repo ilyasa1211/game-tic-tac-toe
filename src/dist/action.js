@@ -16,10 +16,12 @@ class Action {
     }
     vsPlayerOffline(e, index) {
         const divTarget = e.target;
-        this._game._availablePosition.splice(index, 1);
+        if (divTarget.textContent !== "") {
+            return;
+        }
         const player = this._game.getCurrentPlayer();
-        divTarget.onclick = null;
-        divTarget.innerText = player;
+        this._game._availablePosition.splice(index, 1);
+        divTarget.textContent = player;
         this._game.checkGameOver(info);
         this._game.turn();
     }
@@ -32,6 +34,9 @@ class Action {
         if (this._game.isThinking())
             return;
         const divTarget = e.target;
+        if (divTarget.textContent !== "") {
+            return;
+        }
         // User
         console.group("User");
         console.log("Get: ", this._game._availablePosition[index]);
@@ -41,8 +46,7 @@ class Action {
         console.log("Raw After: ", this._game._availablePosition);
         console.groupEnd();
         const player = this._game.getCurrentPlayer();
-        divTarget.onclick = null;
-        divTarget.innerText = player;
+        divTarget.textContent = player;
         this._game.checkGameOver(info);
         this._game.turn();
         // Computer Logic
@@ -60,8 +64,7 @@ class Action {
             console.log("Raw After: ", this._game._availablePosition);
             console.groupEnd();
             const computer = this._game.getCurrentPlayer();
-            divTile.onclick = null;
-            divTile.innerText = computer;
+            divTile.textContent = computer;
             this._game.checkGameOver(info);
             this._game.turn();
             this._game.isThinking(false);

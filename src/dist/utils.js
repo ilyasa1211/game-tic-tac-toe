@@ -10,7 +10,7 @@ class Utils {
         return Math.floor(Math.random() * (max - min) + min);
     }
     static showAlert(message) {
-        alertMessage.innerText = message;
+        alertMessage.textContent = message;
         alertContainer.classList.remove("hidden");
     }
 }

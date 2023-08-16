@@ -1,6 +1,6 @@
 
 class Action {
-    public constructor(private _game: Game) {}
+    public constructor(private _game: Game) { }
 
     public getAction(gameMode: keyof typeof GameMode.prototype.GameModeOptions | undefined) {
         if (!gameMode) {
@@ -17,11 +17,15 @@ class Action {
 
         const divTarget = e.target as HTMLDivElement;
 
-        this._game._availablePosition!.splice(index, 1);
+        if (divTarget.textContent !== "") {
+            return;
+        }
 
         const player = this._game.getCurrentPlayer() as string;
-        divTarget.onclick = null;
-        divTarget.innerText = player;
+
+        this._game._availablePosition!.splice(index, 1);
+
+        divTarget.textContent = player;
 
         this._game.checkGameOver(info);
         this._game.turn();
@@ -36,6 +40,10 @@ class Action {
 
         const divTarget = e.target as HTMLDivElement;
 
+        if (divTarget.textContent !== "") {
+            return;
+        }
+
         // User
         console.group("User");
         console.log("Get: ", this._game._availablePosition![index]);
@@ -46,8 +54,7 @@ class Action {
         console.groupEnd();
 
         const player = this._game.getCurrentPlayer() as string;
-        divTarget.onclick = null;
-        divTarget.innerText = player;
+        divTarget.textContent = player;
 
         this._game.checkGameOver(info);
         this._game.turn();
@@ -69,8 +76,7 @@ class Action {
             console.log("Raw After: ", this._game._availablePosition);
             console.groupEnd();
             const computer = this._game.getCurrentPlayer() as string;
-            divTile.onclick = null;
-            divTile.innerText = computer;
+            divTile.textContent = computer;
 
             this._game.checkGameOver(info);
             this._game.turn();

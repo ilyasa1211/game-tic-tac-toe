@@ -10,7 +10,7 @@ class Utils {
     }
 
     public static showAlert(message: string) {
-        alertMessage.innerText = message;
+        alertMessage.textContent = message;
         alertContainer.classList.remove("hidden")
     }
 }
