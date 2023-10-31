@@ -12,21 +12,43 @@
         <button id="alert-button">OK</button>
       </div>
     </div>
-    <header>
+
+    <header id="gameMode">
       <h1>&because; Tic Tac Toe &because;</h1>
       <ul id="gameModeLists"></ul>
     </header>
-    <main id="main">
-      <h1></h1>
-      <section></section>
+
+    <main id="game">
+      <h1 id="gameModeSelected"></h1>
+      <section id="gameBoard"></section>
     </main>
-    <script src="./src/dist/variable.js"></script>
-    <script src="./src/dist/game-mode.js"></script>
-    <script src="./src/dist/player.js"></script>
-    <script src="./src/dist/action.js"></script>
-    <script src="./src/dist/utils.js"></script>
-    <script src="./src/dist/game.js"></script>
-    <script src="./src/dist/message.js"></script>
-    <script src="./src/dist/main.js"></script>
+
+    <script src="./dist/environment.js"></script>
+
+    <script src="./dist/actions/interfaces/action.interface.js"></script>
+    <script src="./dist/actions/computer.action.js"></script>
+    <script src="./dist/actions/offline.action.js"></script>
+    <script src="./dist/actions/online.action.js"></script>
+
+    <script src="./dist/core/game.action.js"></script>
+    <script src="./dist/core/game.core.js"></script>
+    <script src="./dist/core/game.message.js"></script>
+    <script src="./dist/core/game.mode.js"></script>
+    <script src="./dist/core/game.over.js"></script>
+    <script src="./dist/core/game.player.js"></script>
+    <script src="./dist/core/game.position.js"></script>
+    <script src="./dist/core/game.result.js"></script>
+    <script src="./dist/core/game.status.js"></script>
+    <script src="./dist/core/game.text.js"></script>
+
+    <script src="./dist/models/interfaces/player.interface.js"></script>
+    <script src="./dist/models/player.repository.js"></script>
+
+    <script src="./dist/error-handler.js"></script>
+    <script src="./dist/utils.js"></script>
+    <script src="./dist/player.js"></script>
+    <script src="./dist/online.js"></script>
+    <script src="./dist/display.js"></script>
+    <script src="./dist/main.js"></script>
   </body>
 </html>

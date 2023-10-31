@@ -6,6 +6,7 @@ class Utils {
     const offset = thinkingkAverageMilisecond / 5;
     const quartile1 = thinkingkAverageMilisecond - offset;
     const quartile3 = thinkingkAverageMilisecond + offset;
+
     setTimeout(
       () => callback(),
       this.getRandomIntBetween(quartile1, quartile3)
@@ -21,9 +22,7 @@ class Utils {
   }
 
   public static createIndexArray(size: number): number[] {
-    return new Array(size)
-      .fill(null)
-      .map((valuevt: null, index: number) => index);
+    return new Array(size).fill(null).map((_: null, index: number) => index);
   }
 
   public static shuffleArray(array: any[]) {

@@ -1,37 +1,37 @@
-const serverDomain = "http://localhost:3000";
+gameBoard.style.setProperty("--SIZE", String(GAME_SIZE));
 
-var div = document.getElementsByClassName(
-  "tile"
-) as HTMLCollectionOf<HTMLDivElement>;
-var section = document.getElementsByTagName("section")[0];
-var info = document.getElementsByTagName("h1")[1];
-var gameModeListContainer = document.getElementsByTagName("ul")[0];
-var alertMessage = document.getElementById(
-  "alert-message"
-) as HTMLParagraphElement;
-var alertContainer = document.getElementById(
-  "alert-container"
-) as HTMLDivElement;
-var alertButton = document.getElementById("alert-button") as HTMLButtonElement;
+alertButton.onclick = () => alertContainer.classList.add("hidden");
 
-section.style.setProperty("--SIZE", String(SIZE));
-
-alertButton.addEventListener("click", function (event: MouseEvent) {
-  alertContainer.classList.add("hidden");
-});
+window.onerror = errorHandler;
 
 main();
 
 function main() {
-  const boardSize = 3;
-  const gameMode = new GameMode(gameModeListContainer);
-  const game = new Game(boardSize, section);
-  game.addPlayer(new Player("player_1", "O"));
-  game.addPlayer(new Player("player_2", "X"));
-  game.setAction(new ActionVSComputer());
+  const display = new Display();
+  const playerRepository = new PlayerRepository();
+  const gameStatus = new GameStatus();
+  const gamePosition = new GamePosition(GAME_SIZE);
+  const gameResult = new GameResult(gamePosition);
+  const gamePlayer = new GamePlayer(playerRepository);
+  const gameAction = new GameAction();
 
-  new Display(game, gameMode)
-  
-  Object.defineProperty(window, "retry", { value: () => game.retryGame() });
-  Object.defineProperty(window, "reset", { value: () => game.resetGame() });
+  const game = new Game(
+    GAME_SIZE,
+    gameBoard,
+    gameAction,
+    gameStatus,
+    gameResult,
+    gamePlayer,
+    gamePosition
+  );
+  const gameMode = new GameMode(game, gameModeLists);
+
+  gameMode.addGameMode(new ActionVSComputer());
+  gameMode.addGameMode(new ActionVSOffline());
+  gameMode.addGameMode(new ActionVSOnline());
+
+  game.player.addPlayer(new Player("Player 1", "O"));
+  game.player.addPlayer(new Player("Player 2", "X"));
+
+  display.render(game, gameMode);
 }

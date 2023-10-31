@@ -13,4 +13,10 @@ class Utils {
         alertMessage.textContent = message;
         alertContainer.classList.remove("hidden");
     }
+    static createIndexArray(size) {
+        return new Array(size).fill(null).map((_, index) => index);
+    }
+    static shuffleArray(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
 }

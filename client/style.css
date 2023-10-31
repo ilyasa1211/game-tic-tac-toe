@@ -32,7 +32,7 @@ section {
 }
 
 ul {
-  list-style-typevt: none;
+  list-style-type: none;
   padding: 0;
 }
 
@@ -46,7 +46,7 @@ a {
   margin-bottom: 1rem;
   border: 1px solid white;
   box-sizing: border-box;
-  border-collapsevt: collapse;
+  border-collapse: collapse;
   display: block;
   color: currentColor;
   text-decoration: none;
@@ -64,7 +64,7 @@ div.tile {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-sizevt: 3rem;
+  font-size: 3rem;
 }
 
 .hidden {
@@ -108,4 +108,8 @@ div#alert-container {
 
 #alert-button:hover {
   background-color: rgb(30, 116, 90);
+}
+
+.dim {
+  background-color: rgba(33, 33, 33, 0.9);
 }

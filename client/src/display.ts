@@ -1,22 +1,22 @@
-abstract class Drawable {
-  public constructor(public htmlElement: HTMLElement){};
-  public abstract draw(): void;
+interface IDrawable {
+  htmlElement: HTMLElement;
+  draw(): void;
 }
 
-abstract class Refreshable {
-  public abstract refresh(): void;
+interface IRefreshable {
+  refresh(): void;
 }
 
-class Display {
-  public constructor(...drawables: Drawable[]) {
-    drawables.forEach(drawable => drawable.draw());
+interface IDisplay {
+  render(...drawables: IDrawable[]): void;
+  refresh(...refreshables: IRefreshable[]): void;
+}
+
+class Display implements IDisplay {
+  public render(...drawables: IDrawable[]): void {
+    drawables.forEach((drawable) => drawable.draw());
   }
-
-  public refresh(...refreshables: Refreshable[]) {
-    refreshables.forEach(refreshable => {
-        refreshable.refresh();
-    });
+  public refresh(...refreshables: IRefreshable[]) {
+    refreshables.forEach((refreshable) => refreshable.refresh());
   }
-
-
 }
