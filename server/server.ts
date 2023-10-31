@@ -45,7 +45,7 @@ wss.on("connection", function handleConnection(socket, request) {
       });
     }
   });
-  socket.on("close", (codevt: number, reason) => {
+  socket.on("close", (code: number, reason) => {
     console.log("close", code, reason);
   });
 });

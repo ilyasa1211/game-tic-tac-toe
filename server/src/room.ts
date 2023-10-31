@@ -2,9 +2,10 @@ import { WebSocket } from "ws";
 import Game from "./game";
 import Validator from "./validator";
 import Player from "./player";
+import Utils from "./utils";
 
 type RoomContains = {
-  gamevt: Game;
+  game: Game;
   validator: Validator;
   client: Set<WebSocket>;
 };
@@ -17,7 +18,7 @@ export default class Room {
 
   private Rooms = new Map<RoomId, RoomContains>();
 
-  public joinRoom(socket: WebSocket, gamevt: Game): string {
+  public joinRoom(socket: WebSocket, game: Game): string {
     let joinedRoom = false;
     let resultRoomId: string | undefined = undefined;
 
@@ -37,7 +38,7 @@ export default class Room {
 
       const roomContains: RoomContains = {
         client: new Set([socket]),
-        gamevt: game,
+        game: game,
         validator: new Validator(game),
       };
 
