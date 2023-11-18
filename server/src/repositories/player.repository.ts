@@ -1,5 +1,8 @@
-class PlayerRepository implements PlayerInterface {
-  public constructor(public players: Player[] = []) {}
+import { IPlayer } from "../entities/player";
+import PlayerInterface from "./interfaces/player.interface";
+
+export default class PlayerRepository implements PlayerInterface {
+  public constructor(private players: IPlayer[] = []) {}
 
   public getPlayerByTurn(turn: number): IPlayer {
     return this.players[turn];

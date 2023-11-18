@@ -7,10 +7,11 @@ function errorHandler(
 ) {
   if (error instanceof ResultMessage) {
     gameMode.textContent = error.message;
+    return;
   }
 
-  if (error instanceof InformationalMessage) {
+  // if (error instanceof InformationalMessage) {
     alertContainer.classList.remove("hidden");
-    alertMessage.textContent = error.message;
-  }
+    alertMessage.textContent = error?.message ?? "Error Occured!";
+  // }
 }

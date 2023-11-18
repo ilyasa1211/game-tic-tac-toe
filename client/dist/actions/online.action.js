@@ -8,6 +8,10 @@ class ActionVSOnline {
         if (!game.status.isOnline()) {
             return;
         }
+        const ws = Online.connect(game);
+        if (!Online.isConnectionEstablished) {
+            return;
+        }
         const data = {
             position: index,
             player: game.getCurrentPlayer().character,

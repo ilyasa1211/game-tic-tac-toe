@@ -16,7 +16,7 @@ function main() {
     gameMode.addGameMode(new ActionVSComputer());
     gameMode.addGameMode(new ActionVSOffline());
     gameMode.addGameMode(new ActionVSOnline());
-    game.player.addPlayer(new Player("Player 1", "O"));
-    game.player.addPlayer(new Player("Player 2", "X"));
+    // game.player.addPlayer(new Player("Player 1", "O"));
+    // game.player.addPlayer(new Player("Player 2", "X"));
     display.render(game, gameMode);
 }

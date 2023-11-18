@@ -1,51 +1,74 @@
 import { WebSocket, WebSocketServer } from "ws";
-import Room from "./src/room";
-import Validator from "./src/validator";
-import Game from "./src/game";
-import Player, { PlayerCharacter } from "./src/player";
+import Room from "./src/entities/room";
+import GameFactory from "./src/factories/game.factory";
+import Player, { PlayerCharacter } from "./src/entities/player";
+
+const port = Number(process.env.SERVER_PORT);
 
 const wss = new WebSocketServer({
-  port: 3000,
+  port: port,
 });
-
-type SocketRequest = {
-  position: number;
-  player: PlayerCharacter;
-};
 
 const room = new Room();
 
+export interface OnlineActionRequest {
+  position: number;
+  player: PlayerCharacter;
+}
+
+let i = 1;
 wss.on("connection", function handleConnection(socket, request) {
-  // const availablePosition = new Array(size ** 2).fill(null).map((_valuevt: null, index: number) => index);
-  const roomId = room.joinRoom(socket, new Game(new Player()));
+  i++;
+  i %= 2;
+  
+  const playerCharacter = ["X", "O"][i] as PlayerCharacter;
+  const player = new Player(crypto.randomUUID(), playerCharacter);
+  const roomId = room.joinRoom(socket, GameFactory.create(3), player);
+
+  const initializeData = {
+    player
+  }
+  socket.send(JSON.stringify(initializeData));
 
   socket.on("message", function handleMessage(data) {
-    const request = JSON.parse(data.toString()) as SocketRequest;
-
+    const request = JSON.parse(data.toString()) as OnlineActionRequest;
+    
     if (room.hasRoom(roomId)) {
-      const { game, validator, client } = room.getRoom(roomId)!;
+      const { game, client } = room.getRoom(roomId)!;
 
-      if (client.size !== Room.MININUM_PLAYER_REQUIRED_PER_ROOM) {
+      if (client.size !== room.MININUM_PLAYER_REQUIRED_PER_ROOM) {
         return;
       }
 
-      const isValidPlayer = validator.validatePlayer(request.player);
-      const isValidPosition = validator.validatePosition(request.position);
+      const isValidPlayer =
+        game.getCurrentPlayer().character === request.player;
+      const isValidPosition = game.position.isAvailable(request.position);
 
       // Check input validity
-      if (!(isValidPlayer && isValidPosition)) {
-        return new Error("Invalid Move");
+      if (!isValidPlayer || !isValidPosition) {
+        return "Invalid Move";
       }
 
+      
+      if (game.result.isGameOver()) {
+        return;
+      }
+      
+      game.position.setPosition(request.position, request.player);
+      
       // Send message to everyone
       client.forEach((player: WebSocket) => {
         if (player.readyState === WebSocket.OPEN) {
           player.send(JSON.stringify(request));
         }
       });
+
+      game.turn();
     }
   });
   socket.on("close", (code: number, reason) => {
     console.log("close", code, reason);
   });
 });
+
+console.log("Server running on port " + port);

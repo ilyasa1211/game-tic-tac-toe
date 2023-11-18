@@ -20,9 +20,7 @@ class GameMode {
                 if (this.game.status.isPlaying) {
                     return;
                 }
-                // const childTarget = evt.target as HTMLAnchorElement;
                 this.game.status.isPlaying = true;
-                // info.textContent = childTarget.textContent;
                 this.game.action.setAction(action);
             };
             this.htmlElement.appendChild(list);
