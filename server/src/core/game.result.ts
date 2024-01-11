@@ -32,6 +32,8 @@ export default class GameResult implements IGameResult {
       const isValid: boolean = typeof firstTile !== "undefined";
       const isMatch1: boolean = firstTile === secondTile;
       const isMatch2: boolean = secondTile === thirdTile;
+      console.table([firstTile, secondTile, thirdTile]);
+      
       if (isValid && isMatch1 && isMatch2) {
         this._isGameOver = true;
       }

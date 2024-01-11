@@ -20,7 +20,7 @@ wss.on("connection", function handleConnection(socket, request) {
     const player = new player_1.default(crypto.randomUUID(), playerCharacter);
     const roomId = room.joinRoom(socket, game_factory_1.default.create(3), player);
     const initializeData = {
-        player
+        player,
     };
     socket.send(JSON.stringify(initializeData));
     socket.on("message", function handleMessage(data) {
@@ -36,9 +36,6 @@ wss.on("connection", function handleConnection(socket, request) {
             if (!isValidPlayer || !isValidPosition) {
                 return "Invalid Move";
             }
-            if (game.result.isGameOver()) {
-                return;
-            }
             game.position.setPosition(request.position, request.player);
             // Send message to everyone
             client.forEach((player) => {
@@ -46,6 +43,19 @@ wss.on("connection", function handleConnection(socket, request) {
                     player.send(JSON.stringify(request));
                 }
             });
+            if (game.result.isGameOver()) {
+                client.forEach((player) => {
+                    if (player.readyState === ws_1.WebSocket.OPEN) {
+                        const message = game.result.isWin() ? game.getCurrentPlayer().character + " Win!" : "Draw!";
+                        const res = {
+                            status: "game_over",
+                            message,
+                        };
+                        player.send(JSON.stringify(res));
+                    }
+                });
+                return;
+            }
             game.turn();
         }
     });

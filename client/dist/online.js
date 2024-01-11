@@ -29,6 +29,10 @@ class Online {
             }
             const data = JSON.parse(message.data);
             console.log(data);
+            if (data.status == "game_over") {
+                this.close();
+                throw new ResultMessage(data.message);
+            }
             game.position.setPosition(data.position, data.player);
             // game.turn();
             game.refresh();

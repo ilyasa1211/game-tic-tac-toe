@@ -16,6 +16,7 @@ class GameResult {
             const isValid = typeof firstTile !== "undefined";
             const isMatch1 = firstTile === secondTile;
             const isMatch2 = secondTile === thirdTile;
+            console.table([firstTile, secondTile, thirdTile]);
             if (isValid && isMatch1 && isMatch2) {
                 this._isGameOver = true;
             }

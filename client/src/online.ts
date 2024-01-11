@@ -38,11 +38,21 @@ class Online {
         game.player.addPlayer(JSON.parse(message.data).player as IPlayer);
         this.isGetPlayerData = true;
       }
+
       const data = JSON.parse(message.data) as {
+        status: "play";
         position: number;
         player: PlayerCharacter;
+      } | {
+        status: "game_over",
+        message: string,
       };
       console.log(data);
+      
+      if (data.status == "game_over") {
+        // this.close();
+        throw new ResultMessage(data.message);
+      }
 
       game.position.setPosition(data.position, data.player);
       // game.turn();
