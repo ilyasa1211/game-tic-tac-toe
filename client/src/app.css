@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+#app {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 2rem;
+	text-align: center;
+}
+
+#game {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+	grid-template-rows: repeat(3, 1fr); /* 3 equal rows */
+	gap: 10px; /* optional spacing between cells */
+	width: clamp(300px, 70vmin, 600px);
+	aspect-ratio: 1 / 1;
+	outline: 1px solid white;
+}
+
+#game > div {
+	color: darkblue;
+	background: #ccc;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 2rem;
+	border: 1px solid #999;
+}

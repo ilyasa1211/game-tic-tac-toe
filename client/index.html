@@ -1,54 +1,13 @@
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <link rel="stylesheet" href="style.css" />
-    <title>Tic Tac Toe</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + Preact + TS</title>
   </head>
   <body>
-    <div id="alert-container" class="hidden">
-      <div id="alert-modal" class="hidden">
-        <p id="alert-message">
-          <!-- here is alert message, dynamicly change using javascript -->
-        </p>
-        <button id="alert-button">OK</button>
-      </div>
-    </div>
-
-    <header id="gameMode">
-      <h1>&because; Tic Tac Toe &because;</h1>
-      <ul id="gameModeLists"></ul>
-    </header>
-
-    <main id="game">
-      <h1 id="gameModeSelected"></h1>
-      <section id="gameBoard"></section>
-    </main>
-
-    <script src="./dist/environment.js"></script>
-
-    <script src="./dist/actions/interfaces/action.interface.js"></script>
-    <script src="./dist/actions/computer.action.js"></script>
-    <script src="./dist/actions/offline.action.js"></script>
-    <script src="./dist/actions/online.action.js"></script>
-
-    <script src="./dist/core/game.action.js"></script>
-    <script src="./dist/core/game.core.js"></script>
-    <script src="./dist/core/game.message.js"></script>
-    <script src="./dist/core/game.mode.js"></script>
-    <script src="./dist/core/game.over.js"></script>
-    <script src="./dist/core/game.player.js"></script>
-    <script src="./dist/core/game.position.js"></script>
-    <script src="./dist/core/game.result.js"></script>
-    <script src="./dist/core/game.status.js"></script>
-    <script src="./dist/core/game.text.js"></script>
-
-    <script src="./dist/models/interfaces/player.interface.js"></script>
-    <script src="./dist/models/player.repository.js"></script>
-
-    <script src="./dist/error-handler.js"></script>
-    <script src="./dist/utils.js"></script>
-    <script src="./dist/player.js"></script>
-    <script src="./dist/online.js"></script>
-    <script src="./dist/display.js"></script>
-    <script src="./dist/main.js"></script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
