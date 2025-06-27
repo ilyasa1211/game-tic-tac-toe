@@ -7,25 +7,6 @@ class GamePosition implements IGamePosition {
 		);
 	}
 
-	public setPosition(position: number, character: PlayerCharacter): void {
-		this.position[position] = character;
-		this.takeAvailablePosition(position);
-	}
-
-	public getAvailablePosition(): number[] {
-		return this.availablePosition;
-	}
-
-	public isAvailable(position: number): boolean {
-		return this.position[position] == null;
-	}
-
-	private takeAvailablePosition(index: number): void {
-		const takeCount = 1;
-		const position = this.availablePosition!.indexOf(index);
-		this.availablePosition.splice(position, takeCount);
-	}
-
 	// public getWinStraightPosition(): Array<number[]> {
 	//   const resultIndex: Array<number[]> = [];
 

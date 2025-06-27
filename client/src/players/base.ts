@@ -1,5 +1,6 @@
 import type { RefObject } from "preact";
 import type { IPlayer, IPlayerCharacter } from "./interface.ts";
+import type { GameOverStatus } from "../modes/enums.ts";
 
 export default abstract class BasePlayer implements IPlayer {
 	public id: string;
@@ -28,6 +29,10 @@ export default abstract class BasePlayer implements IPlayer {
 		return Promise.resolve(this.character as IPlayerCharacter);
 	}
 
-	public abstract setup(acquireTurn: () => Promise<void>, takePosition: (position: number, character: IPlayerCharacter) => Promise<void>): Promise<void>;
+	public abstract setup(
+		acquireTurn: () => Promise<void>, 
+		takePosition: (position: number, character: IPlayerCharacter) => Promise<void>,
+		getGameOverStatus: () => Promise<typeof GameOverStatus[keyof typeof GameOverStatus]>
+	): Promise<void>;
 	public abstract setReady(availablePositions: number[], tiles: RefObject<HTMLElement>[]): Promise<void>;
 }

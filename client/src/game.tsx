@@ -30,7 +30,11 @@ export default class GameContainer extends EventTarget {
 			throw new Error("please set tiles");
 		}
 
-		this.mode = CreateMode(mode, this.tiles, this);
+		const resultMode =  CreateMode(mode, this.tiles, this);
+
+		resultMode.setup();
+
+		this.mode = resultMode;
 		this.dispatchEvent(new GameReadyEvent());
 	}
 
