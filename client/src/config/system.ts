@@ -1,4 +1,4 @@
-// this shouldn't be modified, as it's use at core logic
+// this shouldn't be modified, as it's being use at core logic
 export default {
 	WIN_POSITIONS: [
 		[1, 2, 3],

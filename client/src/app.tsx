@@ -5,8 +5,6 @@ import { Mode } from "./modes/enums.ts";
 import { entry } from "./states.ts";
 import ClickEvent from "./events/click.ts";
 import settings from "./config/settings.ts";
-import type { GameResultEventWin } from "./events/game-result.ts";
-import Player from "./players/player.ts";
 
 export function App() {
 	const [gameState, setGameState] = useState<
@@ -21,17 +19,17 @@ export function App() {
 		{
 			name: "Bot",
 			mode: Mode.OFFLINE_BOT,
-			backgrounColor: "bg-indigo-500"
+			backgroundColor: "bg-indigo-500"
 		},
 		{
 			name: "Player",
 			mode: Mode.OFFLINE_PLAYER,
-			backgrounColor: "bg-emerald-500"
+			backgroundColor: "bg-emerald-500"
 		},
 		{
 			name: "Online",
 			mode: Mode.ONLINE_PLAYER,
-			backgrounColor: "bg-pink-500"
+			backgroundColor: "bg-pink-500"
 		},
 	];
 
@@ -66,7 +64,7 @@ export function App() {
 							{gamemodes.map((mode) => (
 								<div
 									onClick={() => handleSelectGameMode(mode.mode)}
-									className={`aspect-square ${mode.backgrounColor} flex justify-center items-center flex-1`}
+									className={`aspect-square ${mode.backgroundColor} flex justify-center items-center flex-1`}
 								>
 									{mode.name}
 								</div>

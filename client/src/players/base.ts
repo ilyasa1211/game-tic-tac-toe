@@ -4,7 +4,7 @@ import type { GameOverStatus } from "../modes/enums.ts";
 
 export default abstract class BasePlayer implements IPlayer {
 	public id: string;
-	public name: string;
+	private name: string;
 	public character: IPlayerCharacter | undefined;
 
 	protected gameEvent;
@@ -14,7 +14,10 @@ export default abstract class BasePlayer implements IPlayer {
 		this.name = name;
 		this.gameEvent = gameEvent;
 		// this.character = character;
+	}
 
+	public getName(): Promise<string> {
+		return Promise.resolve(this.name);
 	}
 
 	public async setCharacter(char: IPlayerCharacter): Promise<void> {

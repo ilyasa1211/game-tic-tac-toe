@@ -1,5 +1,5 @@
 import environment from "../config/environment.ts";
-import { isUndefined } from "../old/validation.ts";
+import { isUndefined } from "../validation.ts";
 
 let ws: WebSocket | undefined;
 
