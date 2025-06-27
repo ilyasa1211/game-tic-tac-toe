@@ -5,8 +5,7 @@ import type { GameOverStatus } from "../modes/enums.ts";
 export type IPlayerCharacter = (typeof setting.PLAYER_CHARACTERS)[number];
 
 export interface IPlayer {
-	id: string;
-	name: string;
+	getName(): Promise<string>;
 	setReady(availablePositions: number[], tiles: RefObject<HTMLElement>[]): Promise<void>;
 	setup(
 		acquireTurn: () => Promise<void>, 
