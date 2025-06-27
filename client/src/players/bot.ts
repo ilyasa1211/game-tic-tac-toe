@@ -3,18 +3,27 @@ import type { ClickEventData } from "../events/click.ts";
 import { getRandomIntBetween, isOccupied, shuffleArray } from "../utils/common.ts";
 import BasePlayer from "./base.ts";
 import type { IPlayer, IPlayerCharacter } from "./interface.ts";
+import { GameOverStatus } from "../modes/enums.ts";
 
 export default class Bot extends BasePlayer implements IPlayer {
-	public async setup(acquireTurn: () => Promise<void>, takePosition: (position: number, character: IPlayerCharacter) => Promise<void>): Promise<void> {
+	public async setup(
+		acquireTurn: () => Promise<void>, 
+		takePosition: (position: number, character: IPlayerCharacter) => Promise<void>,
+		getGameOverStatus: () => Promise<typeof GameOverStatus[keyof typeof GameOverStatus]>
+	): Promise<void> {
 		this.gameEvent.addEventListener("tile-click", async (e: Event) => {
+			if (await getGameOverStatus() !== GameOverStatus.NONE) {
+				return e.preventDefault();
+			}
+
 			const evt = e as CustomEvent<ClickEventData>;
 
 			const { event, getCurrentPlayer, index } = evt.detail;
-			const target = event.target as HTMLElement;
 
 			const currPlayer = await getCurrentPlayer();
 
-			if (event.isTrusted || currPlayer !== this || isOccupied(target)) {
+			// validate
+			if (event.isTrusted || currPlayer !== this || isOccupied(event.target as HTMLElement)) {
 				return;
 			}
 

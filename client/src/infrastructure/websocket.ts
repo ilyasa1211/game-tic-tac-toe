@@ -6,18 +6,9 @@ let ws: WebSocket | undefined;
 export function getConnection(): WebSocket {
 	if (isUndefined(ws)) {
 		ws = new WebSocket(environment.SERVER_WEBSOCKET_URI);
-
-		ws.onopen = (e) => {
-			console.log("Connection Open!");
-		};
-
-		ws.onclose = (e) => {
-			console.log("Connection Closed!");
-		};
-
-		ws.onerror = (e) => {
-			throw new Error("WS Error detected!");
-		};
+		ws.addEventListener("open", (e) => console.info("Connection open!", e));
+		ws.addEventListener("close", (e) => console.warn("Connection close!", e));
+		ws.addEventListener("error", (e) => console.error("Connection error!", e));
 	}
 
 	return ws;
@@ -28,7 +19,7 @@ export function connect(game: IGame): WebSocket {
 		return;
 	}
 
-	ws.onmessage = (message) => {
+	ws.addEventListener("message", (message) => {
 		if (!isGetPlayerData) {
 			game.player.addPlayer(JSON.parse(message.data).player as IPlayer);
 			isGetPlayerData = true;
@@ -51,7 +42,7 @@ export function connect(game: IGame): WebSocket {
 
 		game.position.setPosition(data.position, data.player);
 		game.refresh();
-	};
+	});
 
 	return ws;
 }
