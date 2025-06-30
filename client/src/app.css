@@ -11,8 +11,8 @@
 	display: grid;
 	grid-template-columns: repeat(var(--size), 1fr); /* 3 equal columns */
 	grid-template-rows: repeat(var(--size), 1fr); /* 3 equal rows */
-	gap: 20px; /* optional spacing between cells */
-	width: clamp(300px, 70vmin, 600px);
+	gap: 10px; /* optional spacing between cells */
+	width: clamp(200px, 70vmin, 400px);
 	aspect-ratio: 1 / 1;
 }
 /* 

@@ -11,7 +11,11 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"bradlc.vscode-tailwindcss"
+				"bradlc.vscode-tailwindcss",
+				"docker.docker",
+				"golang.Go",
+				"ms-azuretools.vscode-containers",
+				"ms-azuretools.vscode-docker"
 			]
 		}
 	}
