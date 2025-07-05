@@ -1,7 +1,7 @@
 import type { IPlayer } from "../players/interface.ts";
 
 export type ClickEventData = {
-  event: MouseEvent;
+  event: Event;
   index: number;
   getCurrentPlayer(): Promise<IPlayer>;
 };

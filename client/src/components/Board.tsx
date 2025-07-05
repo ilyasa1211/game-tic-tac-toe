@@ -18,7 +18,8 @@ export default function Board({
 }) {
   const game = useContext(GameContext);
   const tileRefs = useMemo(
-    () => Array.from({ length: size ** 2 }, () => useRef<HTMLDivElement>(null)),
+    () =>
+      Array.from({ length: size ** 2 }, () => useRef<HTMLButtonElement>(null)),
     [size],
   );
 
@@ -28,10 +29,11 @@ export default function Board({
 
   return (
     <div id="game" className="select-none" style={`--size:${size}`}>
-      {Array.from({ length: size ** 2 }, (_, i) => (
-        <div
-          className="bg-stone-100 text-gray-950 text-5xl font-mono flex justify-center-safe items-center-safe font-extrabold"
-          onClick={(ev: MouseEvent) => {
+      {Array.from({ length: size ** 2 }, (_, i) => i).map((i) => (
+        <button
+          type="button"
+          className="bg-stone-100 text-gray-950 text-5xl font-mono flex justify-center items-center font-extrabold"
+          onClick={(ev) => {
             game?.dispatchEvent(
               new ClickEvent({
                 index: i,
@@ -40,9 +42,21 @@ export default function Board({
               }),
             );
           }}
+          // onKeyDown={(ev) => {
+          //   if (ev.key === "Tab") {
+          //     return;
+          //   }
+          //   game?.dispatchEvent(
+          //     new ClickEvent({
+          //       index: i,
+          //       event: ev,
+          //       getCurrentPlayer: game?.getCurrentPlayer.bind(game),
+          //     }),
+          //   );
+          // }}
           key={i}
           ref={tileRefs[i]}
-        ></div>
+        ></button>
       ))}
     </div>
   );

@@ -3,29 +3,41 @@ name: Deploy to Github Pages
 on:
   push:
     branches: 
-      - master
       - main
   workflow_dispatch: 
 
 jobs:
-  build:
+  build-client:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
-      # - name: Build static files
-        # id: build
-        # run: |
-        #   <Not provided for brevity>
-        #   At a minimum this step should build the static files of your site
-        #   <Not provided for brevity>
+      - name: Change directory
+        run: cd client/
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build static files
+        id: build
+        run: pnpm run build
 
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
         with:
-          path: client/
+          path: ./dist/
 
   deploy:
     permissions:
@@ -36,6 +48,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    
+    needs: 
+      - build-client
 
     # Specify runner + deployment step
     runs-on: ubuntu-latest

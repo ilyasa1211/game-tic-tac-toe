@@ -52,10 +52,18 @@ export default function Menu({
     >
       <h1>Tic Tac Toe</h1>
       <div class="flex flex-col gap-3 my-auto">
-        <button class="bg-slate-700" onClick={() => setIsPrepare(true)}>
+        <button
+          type="button"
+          class="bg-slate-700 py-6"
+          onClick={() => setIsPrepare(true)}
+        >
           Play
         </button>
-        <button class="bg-slate-700" onClick={() => setInSetting(true)}>
+        <button
+          type="button"
+          class="bg-slate-700 py-6"
+          onClick={() => setInSetting(true)}
+        >
           Setting
         </button>
       </div>
@@ -65,21 +73,28 @@ export default function Menu({
           <div className="flex justify-around gap-3 p-3 min-w-[200px] w-[80vmin] max-w-[600px] bg-amber-200 rounded-xl">
             {gamemodes.map((mode, i) => (
               <button
+                type="button"
                 key={mode.name}
-                onClick={(e) => i >= 2 ? (alert("this mode still under construction")) : handleSelectGameMode(mode.mode)}
+                onClick={() =>
+                  i >= 2
+                    ? alert("this mode still under construction")
+                    : handleSelectGameMode(mode.mode)
+                }
                 className={`rounded-2xl text-3xl aspect-square ${mode.backgroundColor} flex justify-center items-center flex-1`}
               >
                 {mode.name}
               </button>
             ))}
-            <button onClick={() => setIsPrepare(false)} className="absolute top-4 right-4 text-white text-xl">
+            <button
+              type="button"
+              onClick={() => setIsPrepare(false)}
+              className="absolute top-4 right-4 text-white text-xl"
+            >
               ✕
             </button>
-
           </div>
         </div>
       )}
-
     </div>
   );
 }
