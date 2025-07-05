@@ -18,6 +18,9 @@
 				"ms-azuretools.vscode-docker"
 			]
 		}
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {}
 	}
 
 	// Features to add to the dev container. More info: https://containers.dev/features.

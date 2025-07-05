@@ -6,12 +6,12 @@ export default class GameReadyEvent<T> extends CustomEvent<T> {
 
 export class BoardReady extends CustomEvent<void> {
   public constructor() {
-    super("board-ready")
+    super("board-ready");
   }
 }
 
 export class TilesReady extends CustomEvent<void> {
   public constructor() {
-    super("tiles-ready")
+    super("tiles-ready");
   }
 }

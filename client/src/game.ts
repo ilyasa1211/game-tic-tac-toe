@@ -1,66 +1,77 @@
-import { type RefObject } from "preact";
+import type { RefObject } from "preact";
 import GameReadyEvent, { BoardReady, TilesReady } from "./events/ready.ts";
+import type { Mode } from "./modes/enums.ts";
 import { CreateMode } from "./modes/factory.ts";
 import type { IGameMode } from "./modes/interfaces.ts";
-import type { Mode } from "./modes/enums.ts";
+import { isUndefined } from "./validation.ts";
 
 export default class GameContainer extends EventTarget {
-	private mode: IGameMode | undefined;
-	private tiles: RefObject<HTMLElement | null>[] | undefined;
+  private gameMode: IGameMode | undefined;
+  private mode: (typeof Mode)[keyof typeof Mode] | undefined;
+  private tiles: RefObject<HTMLElement | null>[] | undefined;
 
-	private isTilesReady = false;
-	private isBoardReady = false;
+  private isTilesReady = false;
+  private isBoardReady = false;
 
-	public constructor() {
-		super();
+  public constructor() {
+    super();
 
-		this.addEventListener("board-ready", this.onBoardReady);
-		this.addEventListener("tiles-ready", this.onTilesReady);
-		this.addEventListener("game-ready", this.onGameReady);
-	}
+    this.addEventListener("board-ready", this.onBoardReady);
+    this.addEventListener("tiles-ready", this.onTilesReady);
+    this.addEventListener("game-ready", this.onGameReady);
+  }
 
-	private checkIfGameReady() {
-		if (this.isBoardReady && this.isTilesReady) {
-			this.removeEventListener("board-ready", this.onBoardReady);
-			this.removeEventListener("tiles-ready", this.onTilesReady);
-			this.dispatchEvent(new GameReadyEvent());
-		}
-	}
+  private checkIfGameReady() {
+    if (this.isBoardReady && this.isTilesReady) {
+      this.removeEventListener("board-ready", this.onBoardReady);
+      this.removeEventListener("tiles-ready", this.onTilesReady);
+      this.dispatchEvent(new GameReadyEvent());
+    }
+  }
 
-	private onBoardReady() {
-		this.isBoardReady = true;
-		this.checkIfGameReady();
-	}
+  private onBoardReady() {
+    this.isBoardReady = true;
+    this.checkIfGameReady();
+  }
 
-	private onTilesReady() {
-		this.isTilesReady = true;
-		this.checkIfGameReady();
-	}
+  private onTilesReady() {
+    this.isTilesReady = true;
+    this.checkIfGameReady();
+  }
 
-	private onGameReady() {
-		this.mode.start(this);
-	}
+  private onGameReady() {
+    if (isUndefined(this.mode)) {
+      throw new TypeError("mode is undefined");
+    }
+    if (isUndefined(this.tiles)) {
+      throw new TypeError("tiles is undefined");
+    }
 
-	public setTiles(tiles: RefObject<HTMLElement | null>[]) {
-		this.tiles = tiles;
+    const mode = CreateMode(this.mode, this.tiles, this);
 
-		this.dispatchEvent(new TilesReady());
-	}
+    mode.setup();
 
-	public getCurrentPlayer() {
-		if (typeof this.mode === "undefined") {
-			throw new Error("please set mode first");
-		}
+    mode.start(this);
 
-		return this.mode.getCurrentPlayer();
-	}
+    this.gameMode = mode;
+  }
 
-	public setMode(mode: (typeof Mode)[keyof typeof Mode]) {
-		const resultMode = CreateMode(mode, this.tiles, this);
+  public setTiles(tiles: RefObject<HTMLElement | null>[]) {
+    this.tiles = tiles;
 
-		resultMode.setup();
+    this.dispatchEvent(new TilesReady());
+  }
 
-		this.mode = resultMode;
-		this.dispatchEvent(new BoardReady());
-	}
+  public getCurrentPlayer() {
+    if (typeof this.gameMode === "undefined") {
+      throw new Error("please set mode first");
+    }
+
+    return this.gameMode.getCurrentPlayer();
+  }
+
+  public setMode(mode: (typeof Mode)[keyof typeof Mode]) {
+    this.mode = mode;
+    this.dispatchEvent(new BoardReady());
+  }
 }
