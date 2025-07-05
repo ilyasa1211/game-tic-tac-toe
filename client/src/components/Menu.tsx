@@ -31,7 +31,7 @@ export default function Menu({
     {
       name: "Bot",
       mode: Mode.OFFLINE_BOT,
-      backgroundColor: "bg-indigo-500",
+      backgroundColor: "bg-amber-500",
     },
     {
       name: "Player",
@@ -48,29 +48,38 @@ export default function Menu({
   return (
     <div
       id="menu"
-      className="flex flex-col gap-4 justify-around min-h-[300px] h-[80vmin]"
+      className="flex flex-col justify-center min-h-[300px] h-[80vmin]"
     >
       <h1>Tic Tac Toe</h1>
-      <div>
-        <div className="" onClick={() => setIsPrepare(true)}>
+      <div class="flex flex-col gap-3 my-auto">
+        <button class="bg-slate-700" onClick={() => setIsPrepare(true)}>
           Play
-        </div>
-        <div onClick={() => setInSetting(true)}>Setting</div>
+        </button>
+        <button class="bg-slate-700" onClick={() => setInSetting(true)}>
+          Setting
+        </button>
       </div>
 
       {isPrepare && (
-        <div className="flex justify-around gap-3 p-3 min-w-[200px] w-[80vmin] max-w-[600px]">
-          {gamemodes.map((mode, index) => (
-            <div
-              key={index}
-              onClick={() => handleSelectGameMode(mode.mode)}
-              className={`rounded-2xl aspect-square ${mode.backgroundColor} flex justify-center items-center flex-1`}
-            >
-              {mode.name}
-            </div>
-          ))}
+        <div className="fixed inset-0 bg-opacity-60 z-50 flex justify-center items-center">
+          <div className="flex justify-around gap-3 p-3 min-w-[200px] w-[80vmin] max-w-[600px] bg-amber-200 rounded-xl">
+            {gamemodes.map((mode, i) => (
+              <button
+                key={mode.name}
+                onClick={(e) => i >= 2 ? (alert("this mode still under construction")) : handleSelectGameMode(mode.mode)}
+                className={`rounded-2xl text-3xl aspect-square ${mode.backgroundColor} flex justify-center items-center flex-1`}
+              >
+                {mode.name}
+              </button>
+            ))}
+            <button onClick={() => setIsPrepare(false)} className="absolute top-4 right-4 text-white text-xl">
+              ✕
+            </button>
+
+          </div>
         </div>
       )}
+
     </div>
   );
 }
