@@ -13,9 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
-      - name: Change directory
-        run: cd client/
-
       - uses: pnpm/action-setup@v4
         with:
           version: 10
@@ -27,18 +24,18 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: client/pnpm-lock.yaml
 
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build static files
+      - name: Install dependencies & Build static files
         id: build
-        run: pnpm run build
+        run: |
+         cd client
+         pnpm install
+         pnpm run build
 
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
         with:
-          path: ./dist/
+          path: .client/dist/
 
   deploy:
     permissions:
