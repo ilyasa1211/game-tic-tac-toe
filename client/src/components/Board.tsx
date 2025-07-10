@@ -29,6 +29,7 @@ export default function Board({
 
   return (
     <div id="game" className="select-none" style={`--size:${size}`}>
+      {/* double map here just to get rid of formatter warning */}
       {Array.from({ length: size ** 2 }, (_, i) => i).map((i) => (
         <button
           type="button"
@@ -42,18 +43,6 @@ export default function Board({
               }),
             );
           }}
-          // onKeyDown={(ev) => {
-          //   if (ev.key === "Tab") {
-          //     return;
-          //   }
-          //   game?.dispatchEvent(
-          //     new ClickEvent({
-          //       index: i,
-          //       event: ev,
-          //       getCurrentPlayer: game?.getCurrentPlayer.bind(game),
-          //     }),
-          //   );
-          // }}
           key={i}
           ref={tileRefs[i]}
         ></button>

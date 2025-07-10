@@ -12,11 +12,11 @@ import { GameOverStatus } from "./enums.ts";
 import type { IGameMode } from "./interfaces.ts";
 
 export abstract class OfflineMode implements IGameMode {
-  protected room: IRoom;
+  protected readonly room: IRoom;
+  protected readonly tiles;
+  protected readonly positions: (IPlayerCharacter | undefined)[] = [];
+  protected readonly gameEvent;
   protected turn: number = 0;
-  protected tiles;
-  protected positions: (IPlayerCharacter | undefined)[] = [];
-  protected gameEvent;
 
   // cached status
   private gameOverStatus:

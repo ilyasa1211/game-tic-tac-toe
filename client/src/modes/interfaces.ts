@@ -31,7 +31,14 @@ export interface IGameMode {
 
   addPlayer(player: IPlayer): Promise<void>;
 
+  /**
+   * this is the entry point which is called after setup()
+   * @param eventTarget
+   */
   start(eventTarget: EventTarget): Promise<void>;
 
+  /**
+   * this method is called before start()
+   */
   setup(): Promise<void>;
 }

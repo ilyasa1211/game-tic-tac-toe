@@ -9,7 +9,9 @@ export type ClickEventData = {
 export default class ClickEvent<
   T extends ClickEventData,
 > extends CustomEvent<T> {
+  public static readonly name = "tile-click";
+
   public constructor(data: T) {
-    super("tile-click", { detail: data });
+    super(ClickEvent.name, { detail: data });
   }
 }

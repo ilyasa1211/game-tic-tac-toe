@@ -1,7 +1,6 @@
 import type { MutableRef } from "preact/hooks";
 import BotGame from "./bot.mode.ts";
 import { Mode } from "./enums.ts";
-import OnlineGame from "./online.mode.ts";
 import PlayerGame from "./player.mode.ts";
 
 export function CreateMode(
@@ -14,8 +13,8 @@ export function CreateMode(
       return new BotGame(tiles, gameEvent);
     case Mode.OFFLINE_PLAYER:
       return new PlayerGame(tiles, gameEvent);
-    case Mode.ONLINE_PLAYER:
-      return new OnlineGame(tiles, gameEvent);
+    // case Mode.ONLINE_PLAYER:
+    //   return new OnlineGame(tiles, gameEvent);
     default:
       throw new Error("failed to create game mode");
   }

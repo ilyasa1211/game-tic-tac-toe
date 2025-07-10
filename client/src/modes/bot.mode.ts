@@ -1,5 +1,5 @@
 import settings from "../config/settings.ts";
-import type { GameResultEventWin } from "../events/game-result.ts";
+import { GameResultEventWin } from "../events/game-result.ts";
 import Bot from "../players/bot.ts";
 import Player from "../players/player.ts";
 import { getRandomIntBetween } from "../utils/common.ts";
@@ -8,7 +8,7 @@ import type { IGameMode } from "./interfaces.ts";
 
 export default class BotGame extends OfflineMode implements IGameMode {
   public async setup(): Promise<void> {
-    this.gameEvent.addEventListener("result-win", (e) => {
+    this.gameEvent.addEventListener(GameResultEventWin.name, (e) => {
       const event = e as GameResultEventWin;
 
       const player = event.detail;

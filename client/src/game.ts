@@ -50,8 +50,7 @@ export default class GameContainer extends EventTarget {
     const mode = CreateMode(this.mode, this.tiles, this);
 
     mode.setup();
-
-    mode.start(this);
+    mode.start();
 
     this.gameMode = mode;
   }
