@@ -126,11 +126,6 @@ export abstract class OfflineMode implements IGameMode {
       const size = settings.TILE_SIZE;
       const winPositionOffset = system.WIN_POSITION_OFFSET;
 
-      // if size is 4 (x)
-      // make it 2 x 2 loop (x - 2)
-      // if size is 3
-      // make it 1 x 1 loop
-      // (size - 2
       for (let row = 0; row < size - 2; row++) {
         for (let col = 0; col < size - 2; col++) {
           const position = [

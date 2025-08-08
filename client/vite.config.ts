@@ -3,7 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig((e) => ({
   plugins: [preact(), tailwindcss()],
-  base: "/game-tic-tac-toe",
-});
+  base: e.mode === "github" ? "/game-tic-tac-toe" : "/",
+}));
